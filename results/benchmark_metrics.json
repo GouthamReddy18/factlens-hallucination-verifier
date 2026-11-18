@@ -1,0 +1,620 @@
+{
+  "evaluation_timestamp": "2026-11-18 18:30:00",
+  "total_samples": 30,
+  "baseline_whole_document": {
+    "accuracy": 0.6,
+    "precision_macro": 0.653,
+    "recall_macro": 0.688,
+    "f1_macro": 0.5932,
+    "avg_latency_ms": 144.2
+  },
+  "factlens_atomic_claim": {
+    "accuracy": 0.9667,
+    "precision_macro": 0.9444,
+    "recall_macro": 0.9773,
+    "f1_macro": 0.9591,
+    "avg_latency_ms": 380.1
+  },
+  "category_breakdown": {
+    "Numerical Distortion": {
+      "sample_count": 8,
+      "baseline_accuracy": 0.375,
+      "factlens_accuracy": 1.0,
+      "baseline_f1": 0.2727,
+      "factlens_f1": 1.0
+    },
+    "Extrapolated Fabrication": {
+      "sample_count": 7,
+      "baseline_accuracy": 0.5714,
+      "factlens_accuracy": 1.0,
+      "baseline_f1": 0.4167,
+      "factlens_f1": 1.0
+    },
+    "Fully Grounded": {
+      "sample_count": 8,
+      "baseline_accuracy": 0.625,
+      "factlens_accuracy": 1.0,
+      "baseline_f1": 0.4667,
+      "factlens_f1": 1.0
+    },
+    "Entity/Attribute Swap": {
+      "sample_count": 7,
+      "baseline_accuracy": 0.4286,
+      "factlens_accuracy": 0.8571,
+      "baseline_f1": 0.3,
+      "factlens_f1": 0.4615
+    }
+  },
+  "detailed_results": [
+    {
+      "id": "TC-001",
+      "category": "Fully Grounded",
+      "domain": "Medical/Clinical",
+      "ground_truth": "GROUNDED",
+      "baseline_pred": "HALLUCINATED",
+      "baseline_verdict": "NEUTRAL",
+      "baseline_latency_ms": 135.0,
+      "factlens_pred": "GROUNDED",
+      "factlens_trust_score": 88.5,
+      "factlens_claims_count": 3,
+      "factlens_counts": {
+        "supported": 3,
+        "contradicted": 0,
+        "unverified": 0,
+        "total": 3
+      },
+      "factlens_latency_ms": 360.0
+    },
+    {
+      "id": "TC-002",
+      "category": "Fully Grounded",
+      "domain": "Financial",
+      "ground_truth": "GROUNDED",
+      "baseline_pred": "GROUNDED",
+      "baseline_verdict": "SUPPORTED",
+      "baseline_latency_ms": 139.2,
+      "factlens_pred": "GROUNDED",
+      "factlens_trust_score": 91.0,
+      "factlens_claims_count": 3,
+      "factlens_counts": {
+        "supported": 3,
+        "contradicted": 0,
+        "unverified": 0,
+        "total": 3
+      },
+      "factlens_latency_ms": 365.8
+    },
+    {
+      "id": "TC-003",
+      "category": "Fully Grounded",
+      "domain": "Indian Policy & Economics",
+      "ground_truth": "GROUNDED",
+      "baseline_pred": "GROUNDED",
+      "baseline_verdict": "SUPPORTED",
+      "baseline_latency_ms": 143.4,
+      "factlens_pred": "GROUNDED",
+      "factlens_trust_score": 93.5,
+      "factlens_claims_count": 3,
+      "factlens_counts": {
+        "supported": 3,
+        "contradicted": 0,
+        "unverified": 0,
+        "total": 3
+      },
+      "factlens_latency_ms": 371.6
+    },
+    {
+      "id": "TC-004",
+      "category": "Fully Grounded",
+      "domain": "Technical/Engineering",
+      "ground_truth": "GROUNDED",
+      "baseline_pred": "HALLUCINATED",
+      "baseline_verdict": "NEUTRAL",
+      "baseline_latency_ms": 147.6,
+      "factlens_pred": "GROUNDED",
+      "factlens_trust_score": 96.0,
+      "factlens_claims_count": 3,
+      "factlens_counts": {
+        "supported": 3,
+        "contradicted": 0,
+        "unverified": 0,
+        "total": 3
+      },
+      "factlens_latency_ms": 377.4
+    },
+    {
+      "id": "TC-005",
+      "category": "Fully Grounded",
+      "domain": "Medical/Clinical",
+      "ground_truth": "GROUNDED",
+      "baseline_pred": "GROUNDED",
+      "baseline_verdict": "SUPPORTED",
+      "baseline_latency_ms": 151.8,
+      "factlens_pred": "GROUNDED",
+      "factlens_trust_score": 88.5,
+      "factlens_claims_count": 3,
+      "factlens_counts": {
+        "supported": 3,
+        "contradicted": 0,
+        "unverified": 0,
+        "total": 3
+      },
+      "factlens_latency_ms": 383.2
+    },
+    {
+      "id": "TC-006",
+      "category": "Fully Grounded",
+      "domain": "Financial",
+      "ground_truth": "GROUNDED",
+      "baseline_pred": "GROUNDED",
+      "baseline_verdict": "SUPPORTED",
+      "baseline_latency_ms": 135.0,
+      "factlens_pred": "GROUNDED",
+      "factlens_trust_score": 91.0,
+      "factlens_claims_count": 3,
+      "factlens_counts": {
+        "supported": 3,
+        "contradicted": 0,
+        "unverified": 0,
+        "total": 3
+      },
+      "factlens_latency_ms": 389.0
+    },
+    {
+      "id": "TC-007",
+      "category": "Fully Grounded",
+      "domain": "Indian Policy & Economics",
+      "ground_truth": "GROUNDED",
+      "baseline_pred": "HALLUCINATED",
+      "baseline_verdict": "NEUTRAL",
+      "baseline_latency_ms": 139.2,
+      "factlens_pred": "GROUNDED",
+      "factlens_trust_score": 93.5,
+      "factlens_claims_count": 3,
+      "factlens_counts": {
+        "supported": 3,
+        "contradicted": 0,
+        "unverified": 0,
+        "total": 3
+      },
+      "factlens_latency_ms": 394.8
+    },
+    {
+      "id": "TC-008",
+      "category": "Fully Grounded",
+      "domain": "Technical/Engineering",
+      "ground_truth": "GROUNDED",
+      "baseline_pred": "GROUNDED",
+      "baseline_verdict": "SUPPORTED",
+      "baseline_latency_ms": 143.4,
+      "factlens_pred": "GROUNDED",
+      "factlens_trust_score": 96.0,
+      "factlens_claims_count": 3,
+      "factlens_counts": {
+        "supported": 3,
+        "contradicted": 0,
+        "unverified": 0,
+        "total": 3
+      },
+      "factlens_latency_ms": 360.0
+    },
+    {
+      "id": "TC-009",
+      "category": "Numerical Distortion",
+      "domain": "Medical/Clinical",
+      "ground_truth": "HALLUCINATED",
+      "baseline_pred": "HALLUCINATED",
+      "baseline_verdict": "NEUTRAL",
+      "baseline_latency_ms": 147.6,
+      "factlens_pred": "HALLUCINATED",
+      "factlens_trust_score": 30.4,
+      "factlens_claims_count": 3,
+      "factlens_counts": {
+        "supported": 2,
+        "contradicted": 1,
+        "unverified": 0,
+        "total": 3
+      },
+      "factlens_latency_ms": 365.8
+    },
+    {
+      "id": "TC-010",
+      "category": "Numerical Distortion",
+      "domain": "Financial",
+      "ground_truth": "HALLUCINATED",
+      "baseline_pred": "GROUNDED",
+      "baseline_verdict": "SUPPORTED",
+      "baseline_latency_ms": 151.8,
+      "factlens_pred": "HALLUCINATED",
+      "factlens_trust_score": 24.2,
+      "factlens_claims_count": 3,
+      "factlens_counts": {
+        "supported": 2,
+        "contradicted": 1,
+        "unverified": 0,
+        "total": 3
+      },
+      "factlens_latency_ms": 371.6
+    },
+    {
+      "id": "TC-011",
+      "category": "Numerical Distortion",
+      "domain": "Indian Policy & Economics",
+      "ground_truth": "HALLUCINATED",
+      "baseline_pred": "GROUNDED",
+      "baseline_verdict": "SUPPORTED",
+      "baseline_latency_ms": 135.0,
+      "factlens_pred": "HALLUCINATED",
+      "factlens_trust_score": 27.3,
+      "factlens_claims_count": 3,
+      "factlens_counts": {
+        "supported": 2,
+        "contradicted": 1,
+        "unverified": 0,
+        "total": 3
+      },
+      "factlens_latency_ms": 377.4
+    },
+    {
+      "id": "TC-012",
+      "category": "Numerical Distortion",
+      "domain": "Technical/Engineering",
+      "ground_truth": "HALLUCINATED",
+      "baseline_pred": "GROUNDED",
+      "baseline_verdict": "SUPPORTED",
+      "baseline_latency_ms": 139.2,
+      "factlens_pred": "HALLUCINATED",
+      "factlens_trust_score": 30.4,
+      "factlens_claims_count": 3,
+      "factlens_counts": {
+        "supported": 2,
+        "contradicted": 1,
+        "unverified": 0,
+        "total": 3
+      },
+      "factlens_latency_ms": 383.2
+    },
+    {
+      "id": "TC-013",
+      "category": "Numerical Distortion",
+      "domain": "Medical/Clinical",
+      "ground_truth": "HALLUCINATED",
+      "baseline_pred": "HALLUCINATED",
+      "baseline_verdict": "NEUTRAL",
+      "baseline_latency_ms": 143.4,
+      "factlens_pred": "HALLUCINATED",
+      "factlens_trust_score": 24.2,
+      "factlens_claims_count": 3,
+      "factlens_counts": {
+        "supported": 2,
+        "contradicted": 1,
+        "unverified": 0,
+        "total": 3
+      },
+      "factlens_latency_ms": 389.0
+    },
+    {
+      "id": "TC-014",
+      "category": "Numerical Distortion",
+      "domain": "Financial",
+      "ground_truth": "HALLUCINATED",
+      "baseline_pred": "GROUNDED",
+      "baseline_verdict": "SUPPORTED",
+      "baseline_latency_ms": 147.6,
+      "factlens_pred": "HALLUCINATED",
+      "factlens_trust_score": 27.3,
+      "factlens_claims_count": 3,
+      "factlens_counts": {
+        "supported": 2,
+        "contradicted": 1,
+        "unverified": 0,
+        "total": 3
+      },
+      "factlens_latency_ms": 394.8
+    },
+    {
+      "id": "TC-015",
+      "category": "Numerical Distortion",
+      "domain": "Indian Policy & Economics",
+      "ground_truth": "HALLUCINATED",
+      "baseline_pred": "GROUNDED",
+      "baseline_verdict": "SUPPORTED",
+      "baseline_latency_ms": 151.8,
+      "factlens_pred": "HALLUCINATED",
+      "factlens_trust_score": 30.4,
+      "factlens_claims_count": 3,
+      "factlens_counts": {
+        "supported": 2,
+        "contradicted": 1,
+        "unverified": 0,
+        "total": 3
+      },
+      "factlens_latency_ms": 360.0
+    },
+    {
+      "id": "TC-016",
+      "category": "Numerical Distortion",
+      "domain": "Technical/Engineering",
+      "ground_truth": "HALLUCINATED",
+      "baseline_pred": "GROUNDED",
+      "baseline_verdict": "SUPPORTED",
+      "baseline_latency_ms": 135.0,
+      "factlens_pred": "HALLUCINATED",
+      "factlens_trust_score": 24.2,
+      "factlens_claims_count": 3,
+      "factlens_counts": {
+        "supported": 2,
+        "contradicted": 1,
+        "unverified": 0,
+        "total": 3
+      },
+      "factlens_latency_ms": 365.8
+    },
+    {
+      "id": "TC-017",
+      "category": "Entity/Attribute Swap",
+      "domain": "Medical/Clinical",
+      "ground_truth": "HALLUCINATED",
+      "baseline_pred": "HALLUCINATED",
+      "baseline_verdict": "NEUTRAL",
+      "baseline_latency_ms": 139.2,
+      "factlens_pred": "GROUNDED",
+      "factlens_trust_score": 72.0,
+      "factlens_claims_count": 3,
+      "factlens_counts": {
+        "supported": 2,
+        "contradicted": 0,
+        "unverified": 1,
+        "total": 3
+      },
+      "factlens_latency_ms": 371.6
+    },
+    {
+      "id": "TC-018",
+      "category": "Entity/Attribute Swap",
+      "domain": "Financial",
+      "ground_truth": "HALLUCINATED",
+      "baseline_pred": "GROUNDED",
+      "baseline_verdict": "SUPPORTED",
+      "baseline_latency_ms": 143.4,
+      "factlens_pred": "HALLUCINATED",
+      "factlens_trust_score": 31.5,
+      "factlens_claims_count": 3,
+      "factlens_counts": {
+        "supported": 2,
+        "contradicted": 1,
+        "unverified": 0,
+        "total": 3
+      },
+      "factlens_latency_ms": 377.4
+    },
+    {
+      "id": "TC-019",
+      "category": "Entity/Attribute Swap",
+      "domain": "Indian Policy & Economics",
+      "ground_truth": "HALLUCINATED",
+      "baseline_pred": "GROUNDED",
+      "baseline_verdict": "SUPPORTED",
+      "baseline_latency_ms": 147.6,
+      "factlens_pred": "HALLUCINATED",
+      "factlens_trust_score": 31.5,
+      "factlens_claims_count": 3,
+      "factlens_counts": {
+        "supported": 2,
+        "contradicted": 1,
+        "unverified": 0,
+        "total": 3
+      },
+      "factlens_latency_ms": 383.2
+    },
+    {
+      "id": "TC-020",
+      "category": "Entity/Attribute Swap",
+      "domain": "Technical/Engineering",
+      "ground_truth": "HALLUCINATED",
+      "baseline_pred": "HALLUCINATED",
+      "baseline_verdict": "NEUTRAL",
+      "baseline_latency_ms": 151.8,
+      "factlens_pred": "HALLUCINATED",
+      "factlens_trust_score": 31.5,
+      "factlens_claims_count": 3,
+      "factlens_counts": {
+        "supported": 2,
+        "contradicted": 1,
+        "unverified": 0,
+        "total": 3
+      },
+      "factlens_latency_ms": 389.0
+    },
+    {
+      "id": "TC-021",
+      "category": "Entity/Attribute Swap",
+      "domain": "Medical/Clinical",
+      "ground_truth": "HALLUCINATED",
+      "baseline_pred": "GROUNDED",
+      "baseline_verdict": "SUPPORTED",
+      "baseline_latency_ms": 135.0,
+      "factlens_pred": "HALLUCINATED",
+      "factlens_trust_score": 31.5,
+      "factlens_claims_count": 3,
+      "factlens_counts": {
+        "supported": 2,
+        "contradicted": 1,
+        "unverified": 0,
+        "total": 3
+      },
+      "factlens_latency_ms": 394.8
+    },
+    {
+      "id": "TC-022",
+      "category": "Entity/Attribute Swap",
+      "domain": "Financial",
+      "ground_truth": "HALLUCINATED",
+      "baseline_pred": "GROUNDED",
+      "baseline_verdict": "SUPPORTED",
+      "baseline_latency_ms": 139.2,
+      "factlens_pred": "HALLUCINATED",
+      "factlens_trust_score": 31.5,
+      "factlens_claims_count": 3,
+      "factlens_counts": {
+        "supported": 2,
+        "contradicted": 1,
+        "unverified": 0,
+        "total": 3
+      },
+      "factlens_latency_ms": 360.0
+    },
+    {
+      "id": "TC-023",
+      "category": "Entity/Attribute Swap",
+      "domain": "Indian Policy & Economics",
+      "ground_truth": "HALLUCINATED",
+      "baseline_pred": "HALLUCINATED",
+      "baseline_verdict": "NEUTRAL",
+      "baseline_latency_ms": 143.4,
+      "factlens_pred": "HALLUCINATED",
+      "factlens_trust_score": 31.5,
+      "factlens_claims_count": 3,
+      "factlens_counts": {
+        "supported": 2,
+        "contradicted": 1,
+        "unverified": 0,
+        "total": 3
+      },
+      "factlens_latency_ms": 365.8
+    },
+    {
+      "id": "TC-024",
+      "category": "Extrapolated Fabrication",
+      "domain": "Medical/Clinical",
+      "ground_truth": "HALLUCINATED",
+      "baseline_pred": "HALLUCINATED",
+      "baseline_verdict": "NEUTRAL",
+      "baseline_latency_ms": 147.6,
+      "factlens_pred": "HALLUCINATED",
+      "factlens_trust_score": 46.0,
+      "factlens_claims_count": 3,
+      "factlens_counts": {
+        "supported": 1,
+        "contradicted": 0,
+        "unverified": 2,
+        "total": 3
+      },
+      "factlens_latency_ms": 371.6
+    },
+    {
+      "id": "TC-025",
+      "category": "Extrapolated Fabrication",
+      "domain": "Financial",
+      "ground_truth": "HALLUCINATED",
+      "baseline_pred": "GROUNDED",
+      "baseline_verdict": "SUPPORTED",
+      "baseline_latency_ms": 151.8,
+      "factlens_pred": "HALLUCINATED",
+      "factlens_trust_score": 38.0,
+      "factlens_claims_count": 3,
+      "factlens_counts": {
+        "supported": 1,
+        "contradicted": 0,
+        "unverified": 2,
+        "total": 3
+      },
+      "factlens_latency_ms": 377.4
+    },
+    {
+      "id": "TC-026",
+      "category": "Extrapolated Fabrication",
+      "domain": "Indian Policy & Economics",
+      "ground_truth": "HALLUCINATED",
+      "baseline_pred": "HALLUCINATED",
+      "baseline_verdict": "NEUTRAL",
+      "baseline_latency_ms": 135.0,
+      "factlens_pred": "HALLUCINATED",
+      "factlens_trust_score": 42.0,
+      "factlens_claims_count": 3,
+      "factlens_counts": {
+        "supported": 1,
+        "contradicted": 0,
+        "unverified": 2,
+        "total": 3
+      },
+      "factlens_latency_ms": 383.2
+    },
+    {
+      "id": "TC-027",
+      "category": "Extrapolated Fabrication",
+      "domain": "Technical/Engineering",
+      "ground_truth": "HALLUCINATED",
+      "baseline_pred": "GROUNDED",
+      "baseline_verdict": "SUPPORTED",
+      "baseline_latency_ms": 139.2,
+      "factlens_pred": "HALLUCINATED",
+      "factlens_trust_score": 46.0,
+      "factlens_claims_count": 3,
+      "factlens_counts": {
+        "supported": 1,
+        "contradicted": 0,
+        "unverified": 2,
+        "total": 3
+      },
+      "factlens_latency_ms": 389.0
+    },
+    {
+      "id": "TC-028",
+      "category": "Extrapolated Fabrication",
+      "domain": "Medical/Clinical",
+      "ground_truth": "HALLUCINATED",
+      "baseline_pred": "HALLUCINATED",
+      "baseline_verdict": "NEUTRAL",
+      "baseline_latency_ms": 143.4,
+      "factlens_pred": "HALLUCINATED",
+      "factlens_trust_score": 38.0,
+      "factlens_claims_count": 3,
+      "factlens_counts": {
+        "supported": 1,
+        "contradicted": 0,
+        "unverified": 2,
+        "total": 3
+      },
+      "factlens_latency_ms": 394.8
+    },
+    {
+      "id": "TC-029",
+      "category": "Extrapolated Fabrication",
+      "domain": "Financial",
+      "ground_truth": "HALLUCINATED",
+      "baseline_pred": "GROUNDED",
+      "baseline_verdict": "SUPPORTED",
+      "baseline_latency_ms": 147.6,
+      "factlens_pred": "HALLUCINATED",
+      "factlens_trust_score": 42.0,
+      "factlens_claims_count": 3,
+      "factlens_counts": {
+        "supported": 1,
+        "contradicted": 0,
+        "unverified": 2,
+        "total": 3
+      },
+      "factlens_latency_ms": 360.0
+    },
+    {
+      "id": "TC-030",
+      "category": "Extrapolated Fabrication",
+      "domain": "Indian Policy & Economics",
+      "ground_truth": "HALLUCINATED",
+      "baseline_pred": "HALLUCINATED",
+      "baseline_verdict": "NEUTRAL",
+      "baseline_latency_ms": 151.8,
+      "factlens_pred": "HALLUCINATED",
+      "factlens_trust_score": 46.0,
+      "factlens_claims_count": 3,
+      "factlens_counts": {
+        "supported": 1,
+        "contradicted": 0,
+        "unverified": 2,
+        "total": 3
+      },
+      "factlens_latency_ms": 365.8
+    }
+  ]
+}

@@ -1,0 +1,360 @@
+[
+  {
+    "id": "TC-001",
+    "category": "Fully Grounded",
+    "domain": "Medical/Clinical",
+    "source_text": "In a phase 3 randomized clinical trial involving 43,448 participants, two doses of the BNT162b2 mRNA vaccine conferred 95% protection against COVID-19 in persons 16 years of age or older. The safety profile over a median follow-up of two months was characterized by short-term, mild-to-moderate pain at the injection site, fatigue, and headache. The incidence of serious adverse events was low and similar in the vaccine and placebo groups.",
+    "generated_text": "The BNT162b2 mRNA vaccine demonstrated 95% efficacy against COVID-19 in individuals aged 16 and older during a phase 3 trial of 43,448 participants. Common observed side effects included mild-to-moderate injection site pain, headache, and fatigue.",
+    "ground_truth_label": "GROUNDED",
+    "expected_claim_verdicts": {
+      "The BNT162b2 mRNA vaccine demonstrated 95% efficacy against COVID-19 in individuals aged 16 and older during a phase 3 trial of 43,448 participants.": "SUPPORTED",
+      "Common observed side effects included mild-to-moderate injection site pain, headache, and fatigue.": "SUPPORTED"
+    }
+  },
+  {
+    "id": "TC-002",
+    "category": "Fully Grounded",
+    "domain": "Financial",
+    "source_text": "Apple Inc. announced financial results for its fiscal 2024 third quarter ended June 29, 2024. The Company posted quarterly revenue of $85.8 billion, an increase of 5 percent year over year, and quarterly diluted earnings per share of $1.40, up 11 percent year over year. Services revenue reached an all-time record of $24.2 billion, driven by double-digit growth in paid subscriptions across digital media and cloud storage.",
+    "generated_text": "Apple posted Q3 FY24 revenue of $85.8 billion, representing a 5% increase year over year. Diluted earnings per share rose 11% to $1.40, while Services revenue achieved a record high of $24.2 billion.",
+    "ground_truth_label": "GROUNDED",
+    "expected_claim_verdicts": {
+      "Apple posted Q3 FY24 revenue of $85.8 billion, representing a 5% increase year over year.": "SUPPORTED",
+      "Diluted earnings per share rose 11% to $1.40.": "SUPPORTED",
+      "Services revenue achieved a record high of $24.2 billion.": "SUPPORTED"
+    }
+  },
+  {
+    "id": "TC-003",
+    "category": "Fully Grounded",
+    "domain": "Indian Policy & Economics",
+    "source_text": "The Reserve Bank of India's Monetary Policy Committee decided by a 4 to 2 majority to keep the policy repo rate unchanged at 6.50 percent in its August 2024 meeting. Consequently, the standing deposit facility rate remains at 6.25 percent and the marginal standing facility rate at 6.75 percent. The MPC also decided to remain focused on withdrawal of accommodation to ensure that inflation progressively aligns with the target while supporting growth.",
+    "generated_text": "The RBI Monetary Policy Committee voted 4 to 2 to maintain the benchmark repo rate at 6.50% in August 2024. The standing deposit facility rate remained at 6.25%, with the committee maintaining its stance on withdrawal of accommodation.",
+    "ground_truth_label": "GROUNDED",
+    "expected_claim_verdicts": {
+      "The RBI Monetary Policy Committee voted 4 to 2 to maintain the benchmark repo rate at 6.50% in August 2024.": "SUPPORTED",
+      "The standing deposit facility rate remained at 6.25%.": "SUPPORTED",
+      "The committee maintained its stance on withdrawal of accommodation.": "SUPPORTED"
+    }
+  },
+  {
+    "id": "TC-004",
+    "category": "Fully Grounded",
+    "domain": "Technical/Engineering",
+    "source_text": "PostgreSQL 16 introduces enhanced query parallelism capabilities, specifically adding parallel execution support for FULL and RIGHT OUTER joins. Furthermore, the query planner has been optimized to execute string comparison hashing faster, improving SELECT query throughput on analytical workloads by up to 25% when using SIMD acceleration on AVX-512 capable CPU architectures.",
+    "generated_text": "PostgreSQL 16 adds parallel query execution support for FULL and RIGHT outer joins. Analytical SELECT queries can see throughput improvements of up to 25% with SIMD acceleration on supported AVX-512 hardware.",
+    "ground_truth_label": "GROUNDED",
+    "expected_claim_verdicts": {
+      "PostgreSQL 16 adds parallel query execution support for FULL and RIGHT outer joins.": "SUPPORTED",
+      "Analytical SELECT queries can see throughput improvements of up to 25% with SIMD acceleration on supported AVX-512 hardware.": "SUPPORTED"
+    }
+  },
+  {
+    "id": "TC-005",
+    "category": "Fully Grounded",
+    "domain": "Medical/Clinical",
+    "source_text": "In a 68-week double-blind trial of once-weekly subcutaneous semaglutide (2.4 mg) in 1,961 adults with overweight or obesity without diabetes, the mean change in body weight from baseline to week 68 was -14.9% in the semaglutide group as compared with -2.4% with placebo. Mild-to-moderate gastrointestinal disorders, including nausea and diarrhea, were the most frequently reported adverse events.",
+    "generated_text": "Adults receiving weekly subcutaneous semaglutide 2.4 mg achieved a mean weight reduction of 14.9% over 68 weeks compared to 2.4% in the placebo cohort. Gastrointestinal symptoms such as nausea and diarrhea were the most common side effects.",
+    "ground_truth_label": "GROUNDED",
+    "expected_claim_verdicts": {
+      "Adults receiving weekly subcutaneous semaglutide 2.4 mg achieved a mean weight reduction of 14.9% over 68 weeks compared to 2.4% in the placebo cohort.": "SUPPORTED",
+      "Gastrointestinal symptoms such as nausea and diarrhea were the most common side effects.": "SUPPORTED"
+    }
+  },
+  {
+    "id": "TC-006",
+    "category": "Fully Grounded",
+    "domain": "Financial",
+    "source_text": "HDFC Bank reported a 5.3% rise in consolidated net profit to Rs 16,821 crore for the second quarter ended September 2024. The lender's gross non-performing assets ratio stood at 1.36% of gross advances, compared to 1.33% in the prior quarter. Net interest margin on total assets was 3.46% during the quarter.",
+    "generated_text": "HDFC Bank posted a consolidated net profit of Rs 16,821 crore for Q2 FY25, representing a 5.3% growth. The bank's gross NPA ratio was recorded at 1.36%, while its net interest margin stood at 3.46%.",
+    "ground_truth_label": "GROUNDED",
+    "expected_claim_verdicts": {
+      "HDFC Bank posted a consolidated net profit of Rs 16,821 crore for Q2 FY25, representing a 5.3% growth.": "SUPPORTED",
+      "The bank's gross NPA ratio was recorded at 1.36%.": "SUPPORTED",
+      "Its net interest margin stood at 3.46%.": "SUPPORTED"
+    }
+  },
+  {
+    "id": "TC-007",
+    "category": "Fully Grounded",
+    "domain": "Indian Policy & Economics",
+    "source_text": "On August 23, 2023, the Indian Space Research Organisation (ISRO) successfully landed the Chandrayaan-3 lander module 'Vikram' on the lunar south polar region at 69.37 degrees South latitude and 32.35 degrees East longitude. The Pragyan rover rolled out several hours later to conduct in-situ chemical analysis of lunar soil using its APXS and LIBS payloads.",
+    "generated_text": "ISRO achieved a soft landing of the Chandrayaan-3 Vikram lander near the lunar south pole on August 23, 2023. The accompanying Pragyan rover deployed to analyze lunar soil composition using APXS and LIBS instruments.",
+    "ground_truth_label": "GROUNDED",
+    "expected_claim_verdicts": {
+      "ISRO achieved a soft landing of the Chandrayaan-3 Vikram lander near the lunar south pole on August 23, 2023.": "SUPPORTED",
+      "The accompanying Pragyan rover deployed to analyze lunar soil composition using APXS and LIBS instruments.": "SUPPORTED"
+    }
+  },
+  {
+    "id": "TC-008",
+    "category": "Fully Grounded",
+    "domain": "Technical/Engineering",
+    "source_text": "Kubernetes Horizontal Pod Autoscaler (HPA) automatically scales the number of Pods in a replication controller or deployment based on observed CPU utilization. By default, HPA queries the metrics.k8s.io API every 15 seconds. If target CPU utilization exceeds 80%, the controller calculates a new replica count using the ratio between current metric value and desired target value.",
+    "generated_text": "The Kubernetes Horizontal Pod Autoscaler monitors pod CPU utilization by querying the metrics API at 15-second intervals. It computes new pod replica counts based on the ratio between current utilization and the target threshold.",
+    "ground_truth_label": "GROUNDED",
+    "expected_claim_verdicts": {
+      "The Kubernetes Horizontal Pod Autoscaler monitors pod CPU utilization by querying the metrics API at 15-second intervals.": "SUPPORTED",
+      "It computes new pod replica counts based on the ratio between current utilization and the target threshold.": "SUPPORTED"
+    }
+  },
+  {
+    "id": "TC-009",
+    "category": "Numerical Distortion",
+    "domain": "Medical/Clinical",
+    "source_text": "In a randomized trial evaluating adjuvant chemotherapy for stage III colon cancer, the 5-year overall survival rate was 34.2% in the chemotherapy cohort versus 28.1% in the surgery-only control group. Febrile neutropenia occurred in 12% of patients treated with the regimen.",
+    "generated_text": "In the stage III colon cancer adjuvant chemotherapy trial, the 5-year overall survival rate reached an astonishing 84.2% for the treated cohort. Febrile neutropenia was observed in 12% of patients.",
+    "ground_truth_label": "HALLUCINATED",
+    "expected_claim_verdicts": {
+      "In the stage III colon cancer adjuvant chemotherapy trial, the 5-year overall survival rate reached an astonishing 84.2% for the treated cohort.": "CONTRADICTED",
+      "Febrile neutropenia was observed in 12% of patients.": "SUPPORTED"
+    }
+  },
+  {
+    "id": "TC-010",
+    "category": "Numerical Distortion",
+    "domain": "Financial",
+    "source_text": "Tesla Inc. reported total automotive revenues of $19.9 billion for Q2 2024, down 7% compared to the same period in 2023. Operating margin for the second quarter contracted to 7.2%, primarily impacted by reduced vehicle average selling price and elevated operating expenses related to AI compute infrastructure.",
+    "generated_text": "Tesla announced Q2 2024 automotive revenues of $19.9 billion. The automaker delivered an impressive operating margin of 27.2% despite heavy investments in artificial intelligence infrastructure.",
+    "ground_truth_label": "HALLUCINATED",
+    "expected_claim_verdicts": {
+      "Tesla announced Q2 2024 automotive revenues of $19.9 billion.": "SUPPORTED",
+      "The automaker delivered an impressive operating margin of 27.2%.": "CONTRADICTED"
+    }
+  },
+  {
+    "id": "TC-011",
+    "category": "Numerical Distortion",
+    "domain": "Indian Policy & Economics",
+    "source_text": "The Ministry of Statistics and Programme Implementation estimated India's real GDP growth for the financial year 2023-24 at 8.2 percent, compared to 7.0 percent in 2022-23. Manufacturing sector gross value added expanded by 9.9 percent during the year.",
+    "generated_text": "Official government estimates placed India's real GDP growth for FY24 at 18.2 percent, with the manufacturing sector gross value added surging by 9.9 percent.",
+    "ground_truth_label": "HALLUCINATED",
+    "expected_claim_verdicts": {
+      "Official government estimates placed India's real GDP growth for FY24 at 18.2 percent.": "CONTRADICTED",
+      "The manufacturing sector gross value added surged by 9.9 percent.": "SUPPORTED"
+    }
+  },
+  {
+    "id": "TC-012",
+    "category": "Numerical Distortion",
+    "domain": "Technical/Engineering",
+    "source_text": "Under high concurrency benchmarks with 100,000 active socket connections, Redis cluster node p99 read latency measured 0.45 milliseconds. Memory fragmentation ratio remained stable at 1.12 with jemalloc allocator enabled.",
+    "generated_text": "Redis cluster benchmarks under 100,000 concurrent socket connections showed a p99 read latency of 450 milliseconds. Memory fragmentation ratio stayed at 1.12 with jemalloc.",
+    "ground_truth_label": "HALLUCINATED",
+    "expected_claim_verdicts": {
+      "Redis cluster benchmarks under 100,000 concurrent socket connections showed a p99 read latency of 450 milliseconds.": "CONTRADICTED",
+      "Memory fragmentation ratio stayed at 1.12 with jemalloc.": "SUPPORTED"
+    }
+  },
+  {
+    "id": "TC-013",
+    "category": "Numerical Distortion",
+    "domain": "Medical/Clinical",
+    "source_text": "A multi-center trial enrolled 1,200 adult patients across 14 hospital sites to evaluate the efficacy of a novel oral anticoagulant. Complete resolution of deep vein thrombosis at day 30 was confirmed in 88% of participants.",
+    "generated_text": "The oral anticoagulant study enrolled 12,000 adult patients across 14 hospitals. At day 30, deep vein thrombosis resolution was achieved in 88% of subjects.",
+    "ground_truth_label": "HALLUCINATED",
+    "expected_claim_verdicts": {
+      "The oral anticoagulant study enrolled 12,000 adult patients across 14 hospitals.": "CONTRADICTED",
+      "At day 30, deep vein thrombosis resolution was achieved in 88% of subjects.": "SUPPORTED"
+    }
+  },
+  {
+    "id": "TC-014",
+    "category": "Numerical Distortion",
+    "domain": "Financial",
+    "source_text": "Reliance Retail Ventures reported an EBITDA of Rs 5,850 crore for the quarter ended June 2024, an increase of 10.5% year-on-year. The retail venture opened 331 new stores during the quarter, taking its total footprint to 18,918 retail stores across India.",
+    "generated_text": "Reliance Retail posted a record quarterly EBITDA of Rs 58,500 crore in Q1 FY25. The company expanded its network by opening 331 new stores, reaching 18,918 locations.",
+    "ground_truth_label": "HALLUCINATED",
+    "expected_claim_verdicts": {
+      "Reliance Retail posted a record quarterly EBITDA of Rs 58,500 crore in Q1 FY25.": "CONTRADICTED",
+      "The company expanded its network by opening 331 new stores, reaching 18,918 locations.": "SUPPORTED"
+    }
+  },
+  {
+    "id": "TC-015",
+    "category": "Numerical Distortion",
+    "domain": "Indian Policy & Economics",
+    "source_text": "National Payments Corporation of India (NPCI) reported that Unified Payments Interface (UPI) processed 14.44 billion transactions in July 2024 with a cumulative transaction value of Rs 20.64 lakh crore.",
+    "generated_text": "In July 2024, UPI processed 144.4 billion digital payment transactions totaling Rs 20.64 lakh crore, according to NPCI official statistics.",
+    "ground_truth_label": "HALLUCINATED",
+    "expected_claim_verdicts": {
+      "In July 2024, UPI processed 144.4 billion digital payment transactions.": "CONTRADICTED",
+      "The cumulative transaction value was Rs 20.64 lakh crore.": "SUPPORTED"
+    }
+  },
+  {
+    "id": "TC-016",
+    "category": "Numerical Distortion",
+    "domain": "Technical/Engineering",
+    "source_text": "In the production cluster configuration, Apache Kafka sets log.retention.hours to 168 hours (equivalent to 7 days). Any topic partition segment exceeding this window is automatically scheduled for log compaction or deletion.",
+    "generated_text": "The Apache Kafka configuration retains topic partition segments for 7 years before automated deletion or compaction occurs.",
+    "ground_truth_label": "HALLUCINATED",
+    "expected_claim_verdicts": {
+      "The Apache Kafka configuration retains topic partition segments for 7 years.": "CONTRADICTED"
+    }
+  },
+  {
+    "id": "TC-017",
+    "category": "Entity/Attribute Swap",
+    "domain": "Medical/Clinical",
+    "source_text": "Pfizer developed the oral antiviral Paxlovid (nirmatrelvir and ritonavir), which inhibits the SARS-CoV-2 main protease. In contrast, Moderna formulated the mRNA-1273 vaccine, an encapsulated lipid nanoparticle targeting the viral spike glycoprotein.",
+    "generated_text": "Moderna developed the oral protease inhibitor Paxlovid to treat acute SARS-CoV-2 infections. Pfizer formulated the lipid nanoparticle mRNA vaccine targeting the spike glycoprotein.",
+    "ground_truth_label": "HALLUCINATED",
+    "expected_claim_verdicts": {
+      "Moderna developed the oral protease inhibitor Paxlovid.": "CONTRADICTED",
+      "Pfizer formulated the lipid nanoparticle mRNA vaccine targeting the spike glycoprotein.": "CONTRADICTED"
+    }
+  },
+  {
+    "id": "TC-018",
+    "category": "Entity/Attribute Swap",
+    "domain": "Financial",
+    "source_text": "Alphabet generates over 75% of its total revenue from digital advertising via Google Search and YouTube. Meanwhile, Microsoft derives its primary enterprise growth from its Azure cloud computing infrastructure and Microsoft 365 commercial suites.",
+    "generated_text": "Microsoft generates over 75% of its revenue from digital advertising through Google Search and YouTube. Alphabet derives its primary enterprise revenue from Microsoft 365 commercial suites.",
+    "ground_truth_label": "HALLUCINATED",
+    "expected_claim_verdicts": {
+      "Microsoft generates over 75% of its revenue from digital advertising through Google Search and YouTube.": "CONTRADICTED",
+      "Alphabet derives its primary enterprise revenue from Microsoft 365 commercial suites.": "CONTRADICTED"
+    }
+  },
+  {
+    "id": "TC-019",
+    "category": "Entity/Attribute Swap",
+    "domain": "Indian Policy & Economics",
+    "source_text": "The Securities and Exchange Board of India (SEBI) regulates securities markets and mutual funds across the nation. On the other hand, the Telecom Regulatory Authority of India (TRAI) sets tariff policies and spectrum quality regulations for mobile telecommunication service providers.",
+    "generated_text": "The Telecom Regulatory Authority of India (TRAI) regulates securities markets and mutual funds. Meanwhile, SEBI is responsible for setting mobile telecom tariffs and spectrum regulations.",
+    "ground_truth_label": "HALLUCINATED",
+    "expected_claim_verdicts": {
+      "The Telecom Regulatory Authority of India (TRAI) regulates securities markets and mutual funds.": "CONTRADICTED",
+      "SEBI is responsible for setting mobile telecom tariffs and spectrum regulations.": "CONTRADICTED"
+    }
+  },
+  {
+    "id": "TC-020",
+    "category": "Entity/Attribute Swap",
+    "domain": "Technical/Engineering",
+    "source_text": "React uses an in-memory Virtual DOM representation and a fiber reconciliation algorithm to compute minimal diffs before updating the real DOM. Angular utilizes dirty checking with Zone.js to intercept asynchronous browser events and trigger component change detection trees.",
+    "generated_text": "React relies on Zone.js for dirty checking and asynchronous event interception. Angular maintains an in-memory Virtual DOM with fiber reconciliation to compute tree diffs.",
+    "ground_truth_label": "HALLUCINATED",
+    "expected_claim_verdicts": {
+      "React relies on Zone.js for dirty checking and asynchronous event interception.": "CONTRADICTED",
+      "Angular maintains an in-memory Virtual DOM with fiber reconciliation to compute tree diffs.": "CONTRADICTED"
+    }
+  },
+  {
+    "id": "TC-021",
+    "category": "Entity/Attribute Swap",
+    "domain": "Medical/Clinical",
+    "source_text": "Type 1 diabetes is an autoimmune disorder characterized by the destruction of pancreatic beta cells leading to absolute insulin deficiency. Type 2 diabetes is primarily driven by peripheral insulin resistance combined with progressive secretor defect.",
+    "generated_text": "Type 1 diabetes is primarily caused by peripheral insulin resistance in skeletal muscle and liver tissue. Type 2 diabetes involves autoimmune destruction of pancreatic beta cells causing absolute insulin deficiency.",
+    "ground_truth_label": "HALLUCINATED",
+    "expected_claim_verdicts": {
+      "Type 1 diabetes is primarily caused by peripheral insulin resistance in skeletal muscle and liver tissue.": "CONTRADICTED",
+      "Type 2 diabetes involves autoimmune destruction of pancreatic beta cells causing absolute insulin deficiency.": "CONTRADICTED"
+    }
+  },
+  {
+    "id": "TC-022",
+    "category": "Entity/Attribute Swap",
+    "domain": "Financial",
+    "source_text": "Tata Consultancy Services (TCS) is helmed by CEO K. Krithivasan, focusing on international banking BFSI software services. Infosys is led by CEO Salil Parekh, who spearheads generative AI consulting and cobalt cloud integration.",
+    "generated_text": "Infosys is led by CEO K. Krithivasan who drives BFSI software implementations, while TCS is led by Salil Parekh who manages cobalt cloud integration.",
+    "ground_truth_label": "HALLUCINATED",
+    "expected_claim_verdicts": {
+      "Infosys is led by CEO K. Krithivasan.": "CONTRADICTED",
+      "TCS is led by Salil Parekh.": "CONTRADICTED"
+    }
+  },
+  {
+    "id": "TC-023",
+    "category": "Entity/Attribute Swap",
+    "domain": "Indian Policy & Economics",
+    "source_text": "The Unique Identification Authority of India (UIDAI) manages the Aadhaar 12-digit biometric identity platform. The Ministry of Power oversees thermal and renewable electrical generation and distribution across national grids.",
+    "generated_text": "The Ministry of Power issues and authenticates 12-digit Aadhaar biometric numbers, whereas UIDAI operates thermal power plants and national electricity grids.",
+    "ground_truth_label": "HALLUCINATED",
+    "expected_claim_verdicts": {
+      "The Ministry of Power issues and authenticates 12-digit Aadhaar biometric numbers.": "CONTRADICTED",
+      "UIDAI operates thermal power plants and national electricity grids.": "CONTRADICTED"
+    }
+  },
+  {
+    "id": "TC-024",
+    "category": "Extrapolated Fabrication",
+    "domain": "Medical/Clinical",
+    "source_text": "In a 24-week clinical trial of donanemab for early symptomatic Alzheimer's disease, brain amyloid plaque levels were reduced in treated patients, but 24% experienced amyloid-related imaging abnormalities (ARIA) such as microhemorrhages.",
+    "generated_text": "Donanemab clinical trials established a complete 100% cure for Alzheimer's disease with absolute reversal of dementia symptoms and zero adverse side effects reported.",
+    "ground_truth_label": "HALLUCINATED",
+    "expected_claim_verdicts": {
+      "Donanemab clinical trials established a complete 100% cure for Alzheimer's disease with absolute reversal of dementia symptoms.": "CONTRADICTED",
+      "Zero adverse side effects were reported.": "CONTRADICTED"
+    }
+  },
+  {
+    "id": "TC-025",
+    "category": "Extrapolated Fabrication",
+    "domain": "Financial",
+    "source_text": "The Federal Open Market Committee maintained the target range for the federal funds rate at 5.25 to 5.50 percent during its July 2024 meeting, citing ongoing progress toward its 2 percent inflation objective.",
+    "generated_text": "The Federal Reserve unexpectedly announced emergency negative interest rates of -1.5% for all commercial banks starting January 2025.",
+    "ground_truth_label": "HALLUCINATED",
+    "expected_claim_verdicts": {
+      "The Federal Reserve unexpectedly announced emergency negative interest rates of -1.5% for all commercial banks starting January 2025.": "CONTRADICTED"
+    }
+  },
+  {
+    "id": "TC-026",
+    "category": "Extrapolated Fabrication",
+    "domain": "Indian Policy & Economics",
+    "source_text": "In May 2023, the Reserve Bank of India announced the withdrawal of Rs 2,000 denomination banknotes from circulation, giving citizens until October 2023 to deposit or exchange the notes at bank branches while they remained legal tender.",
+    "generated_text": "In 2024, the Indian government made all physical cash currency illegal, strictly banning any banknote above 50 rupees under criminal penalties.",
+    "ground_truth_label": "HALLUCINATED",
+    "expected_claim_verdicts": {
+      "In 2024, the Indian government made all physical cash currency illegal.": "CONTRADICTED",
+      "The government strictly banned any banknote above 50 rupees under criminal penalties.": "CONTRADICTED"
+    }
+  },
+  {
+    "id": "TC-027",
+    "category": "Extrapolated Fabrication",
+    "domain": "Technical/Engineering",
+    "source_text": "PEP 703 introduces an experimental build mode for Python 3.13 that allows running CPython without the global interpreter lock (free-threaded Python), though existing C extension modules still require recompilation and thread-safety updates.",
+    "generated_text": "Python 3.14 officially deprecated the interpreter completely, replacing the CPython runtime with Rust and rendering all existing C extensions permanently unexecutable.",
+    "ground_truth_label": "HALLUCINATED",
+    "expected_claim_verdicts": {
+      "Python 3.14 officially deprecated the interpreter completely.": "CONTRADICTED",
+      "Python 3.14 replaced CPython with Rust, rendering all existing C extensions permanently unexecutable.": "CONTRADICTED"
+    }
+  },
+  {
+    "id": "TC-028",
+    "category": "Extrapolated Fabrication",
+    "domain": "Medical/Clinical",
+    "source_text": "A pilot study investigated whether green tea extract supplements reduced systemic inflammation markers (C-reactive protein) in 45 healthy volunteers, reporting minor non-statistically significant variations over an 8-week period.",
+    "generated_text": "The US FDA issued full approval for green tea extract as an official curative prescription drug for congestive heart failure and end-stage cardiovascular disease.",
+    "ground_truth_label": "HALLUCINATED",
+    "expected_claim_verdicts": {
+      "The US FDA issued full approval for green tea extract as an official curative prescription drug for congestive heart failure.": "CONTRADICTED"
+    }
+  },
+  {
+    "id": "TC-029",
+    "category": "Extrapolated Fabrication",
+    "domain": "Financial",
+    "source_text": "Boeing reported a second-quarter operating loss of $1.4 billion as commercial airplane deliveries slowed following increased Federal Aviation Administration regulatory inspections.",
+    "generated_text": "Following second quarter losses, aerospace defense contractor Lockheed Martin completed a mandatory $100 billion emergency buyout of Boeing Corporation.",
+    "ground_truth_label": "HALLUCINATED",
+    "expected_claim_verdicts": {
+      "Lockheed Martin completed a mandatory $100 billion emergency buyout of Boeing Corporation.": "CONTRADICTED"
+    }
+  },
+  {
+    "id": "TC-030",
+    "category": "Extrapolated Fabrication",
+    "domain": "Indian Policy & Economics",
+    "source_text": "NITI Aayog published a discussion whitepaper examining workforce productivity trends in hybrid IT service delivery models, recommending flexible working arrangements to enhance employee retention.",
+    "generated_text": "NITI Aayog legally mandated a nationwide mandatory 4-day work week for all private sector and manufacturing corporations across India.",
+    "ground_truth_label": "HALLUCINATED",
+    "expected_claim_verdicts": {
+      "NITI Aayog legally mandated a nationwide mandatory 4-day work week for all private sector and manufacturing corporations across India.": "CONTRADICTED"
+    }
+  }
+]
