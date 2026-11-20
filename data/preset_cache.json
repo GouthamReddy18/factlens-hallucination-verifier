@@ -1,0 +1,238 @@
+{
+  "rbi": {
+    "key": "rbi",
+    "title": "RBI Monetary Policy Brief",
+    "badge": "Numerical Distortion",
+    "category": "Numerical Distortion",
+    "icon": "🏛️",
+    "domain": "Macroeconomic Policy",
+    "desc": "Alters benchmark repo rate from 6.50% to 8.50% and standing deposit facility from 6.25% to 8.25%.",
+    "source": "The Reserve Bank of India's Monetary Policy Committee decided by a 4 to 2 majority to keep the policy repo rate unchanged at 6.50 percent in its August 2024 meeting. Consequently, the standing deposit facility rate remains at 6.25 percent and the marginal standing facility rate at 6.75 percent. The MPC reiterated its commitment to withdraw accommodation to achieve 4% headline inflation.",
+    "generated": "The Reserve Bank of India's Monetary Policy Committee met in August 2024. The committee voted 4 to 2 to raise the repo rate to 8.50 percent, and the standing deposit facility rate was altered to 8.25 percent to control sticky inflation.",
+    "trust_score": 18.5,
+    "verdict": "HALLUCINATED",
+    "counts": {
+      "supported": 1,
+      "contradicted": 2,
+      "unverified": 0,
+      "total": 3
+    },
+    "latency_ms": 38.2,
+    "cached_response_time_ms": 32.4,
+    "baseline_whole_doc": {
+      "verdict": "SUPPORTED",
+      "probabilities": {
+        "entailment": 0.7842,
+        "neutral": 0.1418,
+        "contradiction": 0.0740
+      },
+      "is_hallucinated": false
+    },
+    "claims": [
+      {
+        "claim": "The Reserve Bank of India's Monetary Policy Committee met in August 2024.",
+        "evidence_text": "The Reserve Bank of India's Monetary Policy Committee decided by a 4 to 2 majority to keep the policy repo rate unchanged at 6.50 percent in its August 2024 meeting.",
+        "evidence_similarity": 0.884,
+        "verdict": "SUPPORTED",
+        "probabilities": {
+          "entailment": 0.9624,
+          "neutral": 0.0308,
+          "contradiction": 0.0068
+        },
+        "explanation": "Supported by source evidence with 96.2% entailment confidence."
+      },
+      {
+        "claim": "The committee voted 4 to 2 to raise the repo rate to 8.50 percent.",
+        "evidence_text": "The Reserve Bank of India's Monetary Policy Committee decided by a 4 to 2 majority to keep the policy repo rate unchanged at 6.50 percent in its August 2024 meeting.",
+        "evidence_similarity": 0.842,
+        "verdict": "CONTRADICTED",
+        "probabilities": {
+          "entailment": 0.0132,
+          "neutral": 0.0418,
+          "contradiction": 0.9450
+        },
+        "explanation": "Contradicts source evidence with 94.5% contradiction confidence (Source says repo rate kept unchanged at 6.50%, not raised to 8.50%)."
+      },
+      {
+        "claim": "The standing deposit facility rate was altered to 8.25 percent to control sticky inflation.",
+        "evidence_text": "Consequently, the standing deposit facility rate remains at 6.25 percent and the marginal standing facility rate at 6.75 percent.",
+        "evidence_similarity": 0.816,
+        "verdict": "CONTRADICTED",
+        "probabilities": {
+          "entailment": 0.0168,
+          "neutral": 0.0712,
+          "contradiction": 0.9120
+        },
+        "explanation": "Contradicts source evidence with 91.2% contradiction confidence (Source confirms SDF remains at 6.25%, not 8.25%)."
+      }
+    ]
+  },
+  "clinical": {
+    "key": "clinical",
+    "title": "Clinical Trial Abstract",
+    "badge": "Entity/Attribute Swap",
+    "category": "Entity/Attribute Swap",
+    "icon": "🧬",
+    "domain": "Medical & Pharmacology",
+    "desc": "Swaps developer pharmaceutical firms between oral antiviral Paxlovid and mRNA lipid nanoparticle vaccine.",
+    "source": "Pfizer developed the oral antiviral Paxlovid (nirmatrelvir and ritonavir), which inhibits the SARS-CoV-2 main protease. In contrast, Moderna formulated the mRNA-1273 vaccine, an encapsulated lipid nanoparticle that encodes the viral spike glycoprotein.",
+    "generated": "Moderna developed the oral antiviral medication Paxlovid to inhibit the SARS-CoV-2 protease. Meanwhile, Pfizer formulated the mRNA lipid nanoparticle vaccine targeting the spike glycoprotein.",
+    "trust_score": 0.0,
+    "verdict": "HALLUCINATED",
+    "counts": {
+      "supported": 0,
+      "contradicted": 2,
+      "unverified": 0,
+      "total": 2
+    },
+    "latency_ms": 34.6,
+    "cached_response_time_ms": 28.5,
+    "baseline_whole_doc": {
+      "verdict": "SUPPORTED",
+      "probabilities": {
+        "entailment": 0.7254,
+        "neutral": 0.2012,
+        "contradiction": 0.0734
+      },
+      "is_hallucinated": false
+    },
+    "claims": [
+      {
+        "claim": "Moderna developed the oral antiviral medication Paxlovid to inhibit the SARS-CoV-2 protease.",
+        "evidence_text": "Pfizer developed the oral antiviral Paxlovid (nirmatrelvir and ritonavir), which inhibits the SARS-CoV-2 main protease.",
+        "evidence_similarity": 0.865,
+        "verdict": "CONTRADICTED",
+        "probabilities": {
+          "entailment": 0.0234,
+          "neutral": 0.0816,
+          "contradiction": 0.8950
+        },
+        "explanation": "Contradicts source evidence with 89.5% contradiction confidence (Pfizer developed Paxlovid, not Moderna)."
+      },
+      {
+        "claim": "Meanwhile, Pfizer formulated the mRNA lipid nanoparticle vaccine targeting the spike glycoprotein.",
+        "evidence_text": "In contrast, Moderna formulated the mRNA-1273 vaccine, an encapsulated lipid nanoparticle that encodes the viral spike glycoprotein.",
+        "evidence_similarity": 0.852,
+        "verdict": "CONTRADICTED",
+        "probabilities": {
+          "entailment": 0.0228,
+          "neutral": 0.0952,
+          "contradiction": 0.8820
+        },
+        "explanation": "Contradicts source evidence with 88.2% contradiction confidence (Moderna formulated mRNA-1273, not Pfizer)."
+      }
+    ]
+  },
+  "earnings": {
+    "key": "earnings",
+    "title": "Tech Earnings Release",
+    "badge": "Extrapolated Fabrication",
+    "category": "Extrapolated Fabrication",
+    "icon": "📈",
+    "domain": "Corporate Financials",
+    "desc": "Injects a fictitious assertion that the company will shut down iPhone and transition into nuclear reactors.",
+    "source": "Apple Inc. reported quarterly revenue of $85.8 billion for Q3 FY24, up 5% year-over-year. Diluted earnings per share were $1.40. Services revenue established an all-time record of $24.2 billion, driven by subscriptions across the ecosystem.",
+    "generated": "Apple announced Q3 FY24 revenue of $85.8 billion with diluted EPS of $1.40. The company announced it will shut down the iPhone division in 2025 and transition exclusively into nuclear energy reactors.",
+    "trust_score": 41.2,
+    "verdict": "PARTIALLY_GROUNDED",
+    "counts": {
+      "supported": 1,
+      "contradicted": 0,
+      "unverified": 1,
+      "total": 2
+    },
+    "latency_ms": 36.1,
+    "cached_response_time_ms": 31.0,
+    "baseline_whole_doc": {
+      "verdict": "SUPPORTED",
+      "probabilities": {
+        "entailment": 0.6924,
+        "neutral": 0.2310,
+        "contradiction": 0.0766
+      },
+      "is_hallucinated": false
+    },
+    "claims": [
+      {
+        "claim": "Apple announced Q3 FY24 revenue of $85.8 billion with diluted EPS of $1.40.",
+        "evidence_text": "Apple Inc. reported quarterly revenue of $85.8 billion for Q3 FY24, up 5% year-over-year. Diluted earnings per share were $1.40.",
+        "evidence_similarity": 0.941,
+        "verdict": "SUPPORTED",
+        "probabilities": {
+          "entailment": 0.9782,
+          "neutral": 0.0182,
+          "contradiction": 0.0036
+        },
+        "explanation": "Supported by source evidence with 97.8% entailment confidence."
+      },
+      {
+        "claim": "The company announced it will shut down the iPhone division in 2025 and transition exclusively into nuclear energy reactors.",
+        "evidence_text": "Services revenue established an all-time record of $24.2 billion, driven by subscriptions across the ecosystem.",
+        "evidence_similarity": 0.218,
+        "verdict": "UNVERIFIED",
+        "probabilities": {
+          "entailment": 0.0230,
+          "neutral": 0.8650,
+          "contradiction": 0.1120
+        },
+        "explanation": "Retrieved evidence similarity (0.218) is below threshold (0.25); claim cannot be verified against source (Extrapolated Fabrication)."
+      }
+    ]
+  },
+  "clean": {
+    "key": "clean",
+    "title": "100% Grounded Baseline",
+    "badge": "Fully Grounded",
+    "category": "Fully Grounded",
+    "icon": "🛡️",
+    "domain": "Clinical Pharmacology",
+    "desc": "Fully entailed summary: perfectly entails all numerical, factual, and adverse event assertions.",
+    "source": "In a 68-week double-blind trial of once-weekly subcutaneous semaglutide (2.4 mg) in 1,961 adults with overweight or obesity without diabetes, the mean change in body weight from baseline to week 68 was -14.9% in the semaglutide group as compared with -2.4% with placebo. Gastrointestinal disorders, including nausea and diarrhea, were the most frequently reported adverse events.",
+    "generated": "In a 68-week clinical trial of 1,961 adults with obesity, once-weekly semaglutide 2.4 mg achieved a 14.9% average reduction in body weight compared to 2.4% with placebo. Nausea and diarrhea were among the most common adverse side effects reported.",
+    "trust_score": 94.8,
+    "verdict": "FULLY_GROUNDED",
+    "counts": {
+      "supported": 2,
+      "contradicted": 0,
+      "unverified": 0,
+      "total": 2
+    },
+    "latency_ms": 32.8,
+    "cached_response_time_ms": 29.2,
+    "baseline_whole_doc": {
+      "verdict": "SUPPORTED",
+      "probabilities": {
+        "entailment": 0.9348,
+        "neutral": 0.0524,
+        "contradiction": 0.0128
+      },
+      "is_hallucinated": false
+    },
+    "claims": [
+      {
+        "claim": "In a 68-week clinical trial of 1,961 adults with obesity, once-weekly semaglutide 2.4 mg achieved a 14.9% average reduction in body weight compared to 2.4% with placebo.",
+        "evidence_text": "In a 68-week double-blind trial of once-weekly subcutaneous semaglutide (2.4 mg) in 1,961 adults with overweight or obesity without diabetes, the mean change in body weight from baseline to week 68 was -14.9% in the semaglutide group as compared with -2.4% with placebo.",
+        "evidence_similarity": 0.962,
+        "verdict": "SUPPORTED",
+        "probabilities": {
+          "entailment": 0.9542,
+          "neutral": 0.0382,
+          "contradiction": 0.0076
+        },
+        "explanation": "Supported by source evidence with 95.4% entailment confidence."
+      },
+      {
+        "claim": "Nausea and diarrhea were among the most common adverse side effects reported.",
+        "evidence_text": "Gastrointestinal disorders, including nausea and diarrhea, were the most frequently reported adverse events.",
+        "evidence_similarity": 0.898,
+        "verdict": "SUPPORTED",
+        "probabilities": {
+          "entailment": 0.9412,
+          "neutral": 0.0490,
+          "contradiction": 0.0098
+        },
+        "explanation": "Supported by source evidence with 94.1% entailment confidence."
+      }
+    ]
+  }
+}

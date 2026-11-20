@@ -3,12 +3,16 @@
 Segments reference source text into candidate evidence sentences, computes dense
 semantic embeddings using sentence-transformers, and retrieves top-k relevant
 sentences for each atomic claim based on cosine similarity.
+
+Includes thread optimization and in-memory caching of source sentence embeddings
+to avoid redundant encoding when auditing multiple texts against the same reference document.
 """
 
 from __future__ import annotations
 
+import os
 import logging
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Tuple
 import numpy as np
 
 logger = logging.getLogger(__name__)
@@ -53,6 +57,7 @@ class EvidenceRetriever:
         self.model_name = model_name
         self.device = device
         self._model = None
+        self._sentence_cache: Dict[int, Tuple[List[str], np.ndarray]] = {}
         ensure_nltk_punkt()
 
         if not lazy_load:
@@ -69,6 +74,13 @@ class EvidenceRetriever:
         if self.device is None:
             self.device = "cuda" if torch.cuda.is_available() else "cpu"
 
+        if self.device == "cpu":
+            num_threads = min(4, os.cpu_count() or 4)
+            try:
+                torch.set_num_threads(num_threads)
+            except Exception:
+                pass
+
         logger.info(f"Loading SentenceTransformer '{self.model_name}' on {self.device}...")
         self._model = SentenceTransformer(self.model_name, device=self.device)
 
@@ -78,6 +90,10 @@ class EvidenceRetriever:
         if self._model is None:
             self._load_model()
         return self._model
+
+    def clear_cache(self) -> None:
+        """Clear cached source sentence embeddings."""
+        self._sentence_cache.clear()
 
     def split_sentences(self, text: str) -> List[str]:
         """Split a source text document into clean, individual sentences."""
@@ -119,26 +135,35 @@ class EvidenceRetriever:
         if not claims:
             return []
 
-        source_sentences = self.split_sentences(source_text)
-        if not source_sentences:
-            return [
-                {
-                    "claim": c,
-                    "evidence_sentences": [],
-                    "evidence_scores": [],
-                    "combined_evidence": "",
-                    "top_score": 0.0,
-                }
-                for c in claims
-            ]
+        # Check in-memory source document embedding cache
+        cache_key = hash(source_text)
+        if cache_key in self._sentence_cache:
+            source_sentences, source_embeddings = self._sentence_cache[cache_key]
+        else:
+            source_sentences = self.split_sentences(source_text)
+            if not source_sentences:
+                return [
+                    {
+                        "claim": c,
+                        "evidence_sentences": [],
+                        "evidence_scores": [],
+                        "combined_evidence": "",
+                        "top_score": 0.0,
+                    }
+                    for c in claims
+                ]
 
-        # Compute embeddings
-        source_embeddings = self.model.encode(
-            source_sentences,
-            normalize_embeddings=True,
-            show_progress_bar=False,
-            convert_to_numpy=True,
-        )
+            source_embeddings = self.model.encode(
+                source_sentences,
+                normalize_embeddings=True,
+                show_progress_bar=False,
+                convert_to_numpy=True,
+            )
+            # Retain up to 20 recent documents in LRU-style cache
+            if len(self._sentence_cache) > 20:
+                self._sentence_cache.pop(next(iter(self._sentence_cache)))
+            self._sentence_cache[cache_key] = (source_sentences, source_embeddings)
+
         claim_embeddings = self.model.encode(
             claims,
             normalize_embeddings=True,

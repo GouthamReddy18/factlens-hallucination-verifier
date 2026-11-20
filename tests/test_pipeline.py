@@ -110,6 +110,13 @@ def test_retriever_empty_claims(retriever):
     assert retriever.retrieve_evidence("Some source text.", []) == []
 
 
+def test_retriever_caching(retriever):
+    source = "The Federal Reserve raised rates by 25 basis points in the latest session."
+    retriever.retrieve_evidence(source, ["The Fed raised interest rates."])
+    key = hash(source)
+    assert key in retriever._sentence_cache, "Source sentence embeddings must be cached in memory"
+
+
 # =========================================================================
 # STAGE 3: CROSS-ENCODER NLI VERIFICATION TESTS
 # =========================================================================
@@ -195,6 +202,47 @@ def test_verifier_whole_document_baseline(verifier):
     assert "verdict" in baseline
     assert "probabilities" in baseline
     assert baseline["verdict"] == "SUPPORTED"
+
+
+def test_verifier_cpu_optimization_and_recompute(verifier):
+    assert verifier.device == "cpu"
+    # Verify decoupled zero-lag recomputation works instantaneously
+    sample_claims = [
+        {
+            "claim": "Apple revenue was $85.8 billion.",
+            "evidence_text": "Apple posted revenue of $85.8 billion.",
+            "evidence_similarity": 0.88,
+            "probabilities": {"entailment": 0.92, "neutral": 0.06, "contradiction": 0.02},
+        },
+        {
+            "claim": "The repo rate was drastically increased to 12.50 percent.",
+            "evidence_text": "The repo rate was kept unchanged at 6.50 percent.",
+            "evidence_similarity": 0.78,
+            "probabilities": {"entailment": 0.03, "neutral": 0.10, "contradiction": 0.87},
+        },
+    ]
+
+    # Default thresholds -> 1 supported, 1 contradicted -> HALLUCINATED
+    res_default = verifier.recompute_verification_result(
+        sample_claims,
+        entailment_thresh=0.55,
+        contradiction_thresh=0.45,
+        min_similarity_thresh=0.25,
+    )
+    assert res_default.counts["supported"] == 1
+    assert res_default.counts["contradicted"] == 1
+    assert res_default.verdict == "HALLUCINATED"
+
+    # Extreme contradiction threshold (0.95) -> Contradicted claim falls back to UNVERIFIED
+    res_high_contra = verifier.recompute_verification_result(
+        sample_claims,
+        entailment_thresh=0.55,
+        contradiction_thresh=0.95,
+        min_similarity_thresh=0.25,
+    )
+    assert res_high_contra.counts["contradicted"] == 0
+    assert res_high_contra.counts["unverified"] == 1
+    assert res_high_contra.verdict == "PARTIALLY_GROUNDED"
 
 
 # =========================================================================

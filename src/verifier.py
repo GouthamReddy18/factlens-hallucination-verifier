@@ -3,15 +3,19 @@
 Evaluates premise-hypothesis pairs using MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli,
 mapping entailment, neutral, and contradiction probabilities to structured grounding
 verdicts (SUPPORTED, CONTRADICTED, UNVERIFIED) and calculating a holistic Grounding Trust Score.
+
+Includes dynamic PyTorch INT8 quantization on CPU, thread optimization,
+batched tensor inference, and decoupled zero-lag verdict recomputation.
 """
 
 from __future__ import annotations
 
+import os
+import gc
 import time
 import logging
 from dataclasses import dataclass, asdict
 from typing import List, Dict, Any, Optional
-import torch
 
 logger = logging.getLogger(__name__)
 
@@ -59,6 +63,7 @@ class GroundingVerifier:
         contradiction_threshold: float = 0.45,
         min_similarity_threshold: float = 0.25,
         lazy_load: bool = False,
+        quantize: bool = True,
     ) -> None:
         """Initialize GroundingVerifier.
 
@@ -69,12 +74,15 @@ class GroundingVerifier:
             contradiction_threshold: Minimum contradiction probability required for CONTRADICTED.
             min_similarity_threshold: Evidence cosine similarity below which claim is UNVERIFIED.
             lazy_load: If True, defer model loading until first inference call.
+            quantize: If True and on CPU, apply PyTorch dynamic INT8 quantization.
         """
         self.model_name = model_name
         self.device = device
         self.entailment_threshold = entailment_threshold
         self.contradiction_threshold = contradiction_threshold
         self.min_similarity_threshold = min_similarity_threshold
+        self.quantize = quantize
+        self.is_quantized: bool = False
         self._tokenizer = None
         self._model = None
 
@@ -82,20 +90,47 @@ class GroundingVerifier:
             self._load_model()
 
     def _load_model(self) -> None:
-        """Load tokenizer and sequence classification model."""
+        """Load tokenizer and sequence classification model with optional INT8 quantization."""
         if self._model is not None and self._tokenizer is not None:
             return
 
+        import torch
         from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
         if self.device is None:
             self.device = "cuda" if torch.cuda.is_available() else "cpu"
 
+        # CPU Thread configuration for faster linear/attention operations
+        if self.device == "cpu":
+            num_threads = min(4, os.cpu_count() or 4)
+            try:
+                torch.set_num_threads(num_threads)
+            except Exception:
+                pass
+
         logger.info(f"Loading NLI model '{self.model_name}' on {self.device}...")
         self._tokenizer = AutoTokenizer.from_pretrained(self.model_name)
-        self._model = AutoModelForSequenceClassification.from_pretrained(self.model_name)
-        self._model.to(self.device)
-        self._model.eval()
+        base_model = AutoModelForSequenceClassification.from_pretrained(self.model_name)
+        base_model.to(self.device)
+        base_model.eval()
+
+        # Dynamic INT8 Quantization on CPU
+        if self.device == "cpu" and self.quantize:
+            try:
+                gc.collect()
+                logger.info("Applying dynamic INT8 quantization to DeBERTa-v3 Linear layers...")
+                self._model = torch.quantization.quantize_dynamic(
+                    base_model, {torch.nn.Linear}, dtype=torch.qint8
+                )
+                self.is_quantized = True
+                logger.info("DeBERTa-v3 successfully dynamically quantized to INT8.")
+            except Exception as e:
+                logger.warning(f"INT8 dynamic quantization skipped, using FP32 ({e}).")
+                self._model = base_model
+                self.is_quantized = False
+        else:
+            self._model = base_model
+            self.is_quantized = False
 
     @property
     def tokenizer(self):
@@ -123,6 +158,36 @@ class GroundingVerifier:
                 mapping["neutral"] = int(idx)
         return mapping
 
+    def evaluate_verdict(
+        self,
+        probabilities: Dict[str, float],
+        evidence_similarity: float,
+        entailment_thresh: Optional[float] = None,
+        contradiction_thresh: Optional[float] = None,
+        min_similarity_thresh: Optional[float] = None,
+    ) -> tuple[str, str]:
+        """Map probabilities and similarity to discrete verdict and rationale without re-running model."""
+        e_th = entailment_thresh if entailment_thresh is not None else self.entailment_threshold
+        c_th = contradiction_thresh if contradiction_thresh is not None else self.contradiction_threshold
+        s_th = min_similarity_thresh if min_similarity_thresh is not None else self.min_similarity_threshold
+
+        p_entail = probabilities.get("entailment", 0.0)
+        p_neutral = probabilities.get("neutral", 0.0)
+        p_contra = probabilities.get("contradiction", 0.0)
+
+        if evidence_similarity < s_th:
+            return (
+                "UNVERIFIED",
+                f"Retrieved evidence similarity ({evidence_similarity:.3f}) is below threshold ({s_th:.2f}); claim cannot be verified against source.",
+            )
+
+        if p_entail >= e_th and p_entail > p_contra:
+            return "SUPPORTED", f"Supported by source evidence with {p_entail:.1%} entailment confidence."
+        elif p_contra >= c_th and p_contra > p_entail:
+            return "CONTRADICTED", f"Contradicts source evidence with {p_contra:.1%} contradiction confidence."
+        else:
+            return "UNVERIFIED", f"Insufficient conclusive evidence in source (neutral={p_neutral:.1%}, entail={p_entail:.1%}, contra={p_contra:.1%})."
+
     def verify_pair(
         self,
         premise: str,
@@ -130,6 +195,8 @@ class GroundingVerifier:
         evidence_similarity: float = 1.0,
     ) -> ClaimVerification:
         """Verify a single (premise=evidence, hypothesis=claim) pair."""
+        import torch
+
         if not premise.strip() or evidence_similarity < self.min_similarity_threshold:
             return ClaimVerification(
                 claim=hypothesis,
@@ -144,11 +211,12 @@ class GroundingVerifier:
             premise,
             hypothesis,
             truncation=True,
-            max_length=512,
+            max_length=256,
             return_tensors="pt",
         ).to(self.device)
 
-        with torch.no_grad():
+        context_manager = getattr(torch, "inference_mode", torch.no_grad)
+        with context_manager():
             outputs = self.model(**inputs)
             logits = outputs.logits
             probs = torch.softmax(logits, dim=-1)[0]
@@ -164,19 +232,7 @@ class GroundingVerifier:
             "contradiction": round(p_contra, 4),
         }
 
-        # Decision rules as specified:
-        # SUPPORTED: entailment >= 0.55 and entailment > contradiction
-        # CONTRADICTED: contradiction >= 0.45 and contradiction > entailment
-        # UNVERIFIED: otherwise
-        if p_entail >= self.entailment_threshold and p_entail > p_contra:
-            verdict = "SUPPORTED"
-            explanation = f"Supported by source evidence with {p_entail:.1%} entailment confidence."
-        elif p_contra >= self.contradiction_threshold and p_contra > p_entail:
-            verdict = "CONTRADICTED"
-            explanation = f"Contradicts source evidence with {p_contra:.1%} contradiction confidence."
-        else:
-            verdict = "UNVERIFIED"
-            explanation = f"Insufficient conclusive evidence in source (neutral={p_neutral:.1%}, entail={p_entail:.1%}, contra={p_contra:.1%})."
+        verdict, explanation = self.evaluate_verdict(prob_dict, evidence_similarity)
 
         return ClaimVerification(
             claim=hypothesis,
@@ -193,15 +249,10 @@ class GroundingVerifier:
     ) -> List[ClaimVerification]:
         """Verify multiple (premise, hypothesis, similarity) pairs in a single batched inference call.
 
-        Args:
-            pairs: List of dicts, each containing:
-                - 'premise': source evidence text
-                - 'hypothesis': atomic claim text
-                - 'evidence_similarity': cosine similarity float
-
-        Returns:
-            List of ClaimVerification objects corresponding to input order.
+        Optimized with max_length=256 and torch.inference_mode.
         """
+        import torch
+
         if not pairs:
             return []
 
@@ -235,11 +286,12 @@ class GroundingVerifier:
                 eligible_hypotheses,
                 padding=True,
                 truncation=True,
-                max_length=512,
+                max_length=256,
                 return_tensors="pt",
             ).to(self.device)
 
-            with torch.no_grad():
+            context_manager = getattr(torch, "inference_mode", torch.no_grad)
+            with context_manager():
                 outputs = self.model(**inputs)
                 all_probs = torch.softmax(outputs.logits, dim=-1)
 
@@ -257,20 +309,13 @@ class GroundingVerifier:
                     "contradiction": round(p_contra, 4),
                 }
 
-                if p_entail >= self.entailment_threshold and p_entail > p_contra:
-                    verdict = "SUPPORTED"
-                    explanation = f"Supported by source evidence with {p_entail:.1%} entailment confidence."
-                elif p_contra >= self.contradiction_threshold and p_contra > p_entail:
-                    verdict = "CONTRADICTED"
-                    explanation = f"Contradicts source evidence with {p_contra:.1%} contradiction confidence."
-                else:
-                    verdict = "UNVERIFIED"
-                    explanation = f"Insufficient conclusive evidence in source (neutral={p_neutral:.1%}, entail={p_entail:.1%}, contra={p_contra:.1%})."
+                sim_val = float(pairs[original_idx].get("evidence_similarity", 1.0))
+                verdict, explanation = self.evaluate_verdict(prob_dict, sim_val)
 
                 verifications[original_idx] = ClaimVerification(
                     claim=eligible_hypotheses[i],
                     evidence_text=eligible_premises[i],
-                    evidence_similarity=pairs[original_idx].get("evidence_similarity", 1.0),
+                    evidence_similarity=sim_val,
                     verdict=verdict,
                     probabilities=prob_dict,
                     explanation=explanation,
@@ -335,6 +380,70 @@ class GroundingVerifier:
             baseline_whole_doc=baseline_result,
         )
 
+    def recompute_verification_result(
+        self,
+        raw_claims: List[Dict[str, Any]],
+        entailment_thresh: float,
+        contradiction_thresh: float,
+        min_similarity_thresh: float,
+        baseline_info: Optional[Dict[str, Any]] = None,
+        latency_ms: float = 0.0,
+    ) -> VerificationResult:
+        """Zero-lag recomputation of verdicts and Grounding Trust Score from stored raw probabilities."""
+        updated_claims: List[ClaimVerification] = []
+
+        for item in raw_claims:
+            claim_text = item.get("claim", "")
+            ev_text = item.get("evidence_text", "")
+            ev_sim = float(item.get("evidence_similarity", 0.0))
+            probs = item.get("probabilities", {"entailment": 0.0, "neutral": 1.0, "contradiction": 0.0})
+
+            v, expl = self.evaluate_verdict(
+                probabilities=probs,
+                evidence_similarity=ev_sim,
+                entailment_thresh=entailment_thresh,
+                contradiction_thresh=contradiction_thresh,
+                min_similarity_thresh=min_similarity_thresh,
+            )
+
+            updated_claims.append(
+                ClaimVerification(
+                    claim=claim_text,
+                    evidence_text=ev_text,
+                    evidence_similarity=ev_sim,
+                    verdict=v,
+                    probabilities=probs,
+                    explanation=expl,
+                )
+            )
+
+        counts = {
+            "supported": sum(1 for c in updated_claims if c.verdict == "SUPPORTED"),
+            "contradicted": sum(1 for c in updated_claims if c.verdict == "CONTRADICTED"),
+            "unverified": sum(1 for c in updated_claims if c.verdict == "UNVERIFIED"),
+            "total": len(updated_claims),
+        }
+
+        trust_score = self._compute_trust_score(updated_claims)
+
+        if counts["contradicted"] > 0:
+            doc_verdict = "HALLUCINATED"
+        elif counts["unverified"] > 0 and counts["supported"] == 0:
+            doc_verdict = "UNVERIFIED"
+        elif counts["unverified"] > 0:
+            doc_verdict = "PARTIALLY_GROUNDED"
+        else:
+            doc_verdict = "FULLY_GROUNDED"
+
+        return VerificationResult(
+            claims=updated_claims,
+            trust_score=trust_score,
+            verdict=doc_verdict,
+            counts=counts,
+            latency_ms=round(latency_ms, 2),
+            baseline_whole_doc=baseline_info,
+        )
+
     def _compute_trust_score(self, claims: List[ClaimVerification]) -> float:
         """Calculate weighted Grounding Trust Score (0.0 to 100.0%).
 
@@ -347,11 +456,11 @@ class GroundingVerifier:
         raw_score = 0.0
         for c in claims:
             if c.verdict == "SUPPORTED":
-                raw_score += 1.0 * c.probabilities["entailment"]
+                raw_score += 1.0 * c.probabilities.get("entailment", 0.0)
             elif c.verdict == "UNVERIFIED":
-                raw_score += 0.20 * (1.0 - c.probabilities["contradiction"])
+                raw_score += 0.20 * (1.0 - c.probabilities.get("contradiction", 0.0))
             elif c.verdict == "CONTRADICTED":
-                raw_score -= 1.50 * c.probabilities["contradiction"]
+                raw_score -= 1.50 * c.probabilities.get("contradiction", 0.0)
 
         normalized = (raw_score / len(claims)) * 100.0
         return max(0.0, min(100.0, round(normalized, 1)))
@@ -362,15 +471,18 @@ class GroundingVerifier:
         generated_text: str,
     ) -> Dict[str, Any]:
         """Naive whole-text baseline NLI: passes entire premise and hypothesis."""
+        import torch
+
         inputs = self.tokenizer(
             source_text,
             generated_text,
             truncation=True,
-            max_length=512,
+            max_length=256,
             return_tensors="pt",
         ).to(self.device)
 
-        with torch.no_grad():
+        context_manager = getattr(torch, "inference_mode", torch.no_grad)
+        with context_manager():
             outputs = self.model(**inputs)
             probs = torch.softmax(outputs.logits, dim=-1)[0]
 
