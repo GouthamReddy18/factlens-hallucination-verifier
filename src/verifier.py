@@ -53,7 +53,7 @@ class VerificationResult:
 class GroundingVerifier:
     """Cross-encoder Natural Language Inference verifier for atomic claims."""
 
-    DEFAULT_MODEL_NAME = "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli"
+    DEFAULT_MODEL_NAME = "cross-encoder/nli-MiniLM2-L6-H768"
 
     def __init__(
         self,
@@ -61,7 +61,7 @@ class GroundingVerifier:
         device: Optional[str] = None,
         entailment_threshold: float = 0.55,
         contradiction_threshold: float = 0.45,
-        min_similarity_threshold: float = 0.15,
+        min_similarity_threshold: float = 0.25,
         lazy_load: bool = False,
         quantize: bool = False,
     ) -> None:
@@ -109,7 +109,11 @@ class GroundingVerifier:
                 pass
 
         logger.info(f"Loading NLI model '{self.model_name}' in FP32 on {self.device}...")
-        self._tokenizer = AutoTokenizer.from_pretrained(self.model_name, use_fast=False)
+        try:
+            self._tokenizer = AutoTokenizer.from_pretrained(self.model_name, use_fast=False)
+        except Exception:
+            self._tokenizer = AutoTokenizer.from_pretrained(self.model_name)
+
         model = AutoModelForSequenceClassification.from_pretrained(
             self.model_name,
             torch_dtype=torch.float32,
@@ -119,7 +123,7 @@ class GroundingVerifier:
         model.eval()
         self._model = model
         self.is_quantized = False
-        logger.info(f"DeBERTa-v3 successfully loaded in FP32 on {self.device}.")
+        logger.info(f"NLI model '{self.model_name}' successfully loaded in FP32 on {self.device}.")
 
     @property
     def tokenizer(self):
@@ -142,23 +146,26 @@ class GroundingVerifier:
             return self.model(**inputs)
 
     def _get_label_mapping(self) -> Dict[str, int]:
-        """Extract label mapping from model config (0: entailment, 1: neutral, 2: contradiction)."""
-        id2label = getattr(self.model.config, "id2label", {0: "entailment", 1: "neutral", 2: "contradiction"})
-        mapping = {}
-        for idx, name in id2label.items():
-            name_lower = str(name).lower()
-            if "entail" in name_lower:
-                mapping["entailment"] = int(idx)
-            elif "contra" in name_lower:
-                mapping["contradiction"] = int(idx)
-            elif "neut" in name_lower:
-                mapping["neutral"] = int(idx)
+        """Dynamically extract label index mapping from model config."""
+        id2label = getattr(self.model.config, "id2label", None)
+        mapping: Dict[str, int] = {}
+        if id2label:
+            for idx, name in id2label.items():
+                name_lower = str(name).lower()
+                if "entail" in name_lower:
+                    mapping["entailment"] = int(idx)
+                elif "contra" in name_lower:
+                    mapping["contradiction"] = int(idx)
+                elif "neut" in name_lower:
+                    mapping["neutral"] = int(idx)
+
+        # Fallback defaults if id2label missing
         if "entailment" not in mapping:
-            mapping["entailment"] = 0
-        if "neutral" not in mapping:
-            mapping["neutral"] = 1
+            mapping["entailment"] = 1
         if "contradiction" not in mapping:
-            mapping["contradiction"] = 2
+            mapping["contradiction"] = 0
+        if "neutral" not in mapping:
+            mapping["neutral"] = 2
         return mapping
 
     def evaluate_verdict(

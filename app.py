@@ -397,7 +397,7 @@ st.markdown("""
 PRESET_CACHE_PATH = _ROOT / "data" / "preset_cache.json"
 
 @st.cache_data
-def load_preset_cache() -> Dict[str, Any]:
+def load_preset_cache(mtime: float = 0.0) -> Dict[str, Any]:
     """Load pre-computed verified audit outputs for sub-50ms instant preset responsiveness."""
     if PRESET_CACHE_PATH.exists():
         try:
@@ -407,7 +407,8 @@ def load_preset_cache() -> Dict[str, Any]:
             pass
     return {}
 
-CACHED_PRESETS = load_preset_cache()
+_preset_mtime = PRESET_CACHE_PATH.stat().st_mtime if PRESET_CACHE_PATH.exists() else 0.0
+CACHED_PRESETS = load_preset_cache(_preset_mtime)
 
 # Fallback definitions if preset_cache.json not yet generated
 DEFAULT_PRESET_CONFIGS = {
@@ -629,7 +630,7 @@ def generate_audit_markdown(
 # =========================================================================
 
 @st.cache_resource(show_spinner=False)
-def get_live_pipeline(device: str = "cpu", quantize: bool = True):
+def get_live_pipeline(device: str = "cpu", model_name: str = "cross-encoder/nli-MiniLM2-L6-H768"):
     """Lazy loader for live PyTorch inference models."""
     from src.decomposer import ClaimDecomposer
     from src.retriever import EvidenceRetriever
@@ -637,7 +638,7 @@ def get_live_pipeline(device: str = "cpu", quantize: bool = True):
 
     decomposer = ClaimDecomposer(default_mode="syntactic")
     retriever = EvidenceRetriever(device=device, lazy_load=False)
-    verifier = GroundingVerifier(device=device, lazy_load=False, quantize=quantize)
+    verifier = GroundingVerifier(model_name=model_name, device=device, lazy_load=False)
     return decomposer, retriever, verifier
 
 
@@ -952,7 +953,7 @@ with tab_audit:
                     t_start = time.perf_counter()
                     decomposer, retriever, verifier = get_live_pipeline(
                         device=device_selection,
-                        quantize=True,
+                        model_name="cross-encoder/nli-MiniLM2-L6-H768",
                     )
 
                     # Stage 1: Decompose
