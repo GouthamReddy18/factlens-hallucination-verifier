@@ -275,9 +275,9 @@ def test_benchmark_dataset_integrity():
     assert "Extrapolated Fabrication" in categories
 
 
-def test_evaluator_mini_run(tmp_path):
-    # Run evaluator on 2 cases in an isolated tmp directory to test end-to-end integration without touching production metrics
-    evaluator = FactLensEvaluator(results_dir=str(tmp_path))
+def test_evaluator_mini_run(tmp_path, retriever, verifier):
+    # Run evaluator on 2 cases using shared test fixtures to avoid re-allocating models in memory-constrained environments
+    evaluator = FactLensEvaluator(results_dir=str(tmp_path), retriever=retriever, verifier=verifier)
     metrics = evaluator.run_benchmark(limit=2)
 
     assert "baseline_whole_document" in metrics

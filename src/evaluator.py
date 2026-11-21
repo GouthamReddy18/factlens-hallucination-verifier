@@ -37,16 +37,18 @@ class FactLensEvaluator:
         dataset_path: str = "data/benchmark_dataset.json",
         results_dir: str = "results",
         device: Optional[str] = None,
+        retriever: Optional[EvidenceRetriever] = None,
+        verifier: Optional[GroundingVerifier] = None,
     ) -> None:
-        """Initialize evaluator with benchmark dataset path."""
+        """Initialize evaluator with benchmark dataset path and optional shared pipeline instances."""
         self.dataset_path = Path(dataset_path)
         self.results_dir = Path(results_dir)
         self.results_dir.mkdir(parents=True, exist_ok=True)
         self.device = device
 
         self.decomposer = ClaimDecomposer(default_mode="syntactic")
-        self.retriever = EvidenceRetriever(device=self.device, lazy_load=True)
-        self.verifier = GroundingVerifier(device=self.device, lazy_load=True)
+        self.retriever = retriever if retriever is not None else EvidenceRetriever(device=self.device, lazy_load=True)
+        self.verifier = verifier if verifier is not None else GroundingVerifier(device=self.device, lazy_load=True)
 
     def load_dataset(self) -> List[Dict[str, Any]]:
         """Load benchmark dataset from JSON."""
