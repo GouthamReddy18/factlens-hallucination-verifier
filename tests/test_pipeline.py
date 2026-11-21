@@ -150,8 +150,62 @@ def test_verifier_low_similarity_unverified(verifier):
     premise = "The moon orbits the Earth at an average distance of 384,400 kilometers."
     hypothesis = "The central bank lowered the benchmark interest rate by 50 basis points."
 
-    res = verifier.verify_pair(premise=premise, hypothesis=hypothesis, evidence_similarity=0.15)
+    res = verifier.verify_pair(premise=premise, hypothesis=hypothesis, evidence_similarity=0.10)
     assert res.verdict == "UNVERIFIED"
+
+
+def test_verifier_rbi_custom_case(retriever, verifier):
+    source_text = (
+        "The Reserve Bank of India kept the repo rate unchanged at 6.50 percent. "
+        "Economic growth was estimated at 7.2 percent for the fiscal year. "
+        "The monsoon season showed above normal rainfall."
+    )
+    claims = [
+        "The RBI maintained the benchmark repo rate at 6.50 percent.",
+        "Economic growth was estimated at 3.1 percent for the fiscal year.",
+        "Foreign direct investment surged by 25 percent.",
+    ]
+
+    retrieval = retriever.retrieve_evidence(source_text, claims, top_k=2)
+    result = verifier.verify_pipeline(retrieval)
+
+    assert len(result.claims) == 3
+    # Claim 1: Supported
+    assert result.claims[0].verdict == "SUPPORTED"
+    assert result.claims[0].probabilities["entailment"] >= 0.55
+    # Claim 2: Contradicted (3.1% vs 7.2%)
+    assert result.claims[1].verdict == "CONTRADICTED"
+    assert result.claims[1].probabilities["contradiction"] >= 0.45
+    # Claim 3: Unverified
+    assert result.claims[2].verdict == "UNVERIFIED"
+    assert result.verdict == "HALLUCINATED"
+
+
+def test_verifier_aditya_supported_case(retriever, verifier):
+    source_text = (
+        "Aditya-L1 is the first Indian space-based observatory designed to study the Sun. "
+        "The spacecraft was successfully placed in a halo orbit around the Sun-Earth Lagrange point L1, "
+        "located about 1.5 million kilometers from Earth. "
+        "The observatory carries seven scientific payloads developed to observe the solar photosphere, "
+        "chromosphere, and corona. "
+        "The mission was launched on September 2, 2023, aboard the PSLV-C57 rocket from Sriharikota."
+    )
+    claims = [
+        "Aditya-L1 is the first Indian space-based observatory designed to study the Sun.",
+        "The spacecraft was placed in a halo orbit around Lagrange point L1 located about 1.5 million kilometers from Earth.",
+        "The observatory carries seven scientific payloads developed to observe the solar photosphere, chromosphere.",
+        "The mission was launched on September 2, 2023, aboard the PSLV-C57 rocket from Sriharikota.",
+    ]
+
+    retrieval = retriever.retrieve_evidence(source_text, claims, top_k=2)
+    result = verifier.verify_pipeline(retrieval)
+
+    assert len(result.claims) == 4
+    for claim_res in result.claims:
+        assert claim_res.verdict == "SUPPORTED"
+        assert claim_res.probabilities["entailment"] > 0.90
+    assert result.verdict == "FULLY_GROUNDED"
+    assert result.trust_score >= 95.0
 
 
 def test_verifier_trust_score_calculation(verifier):

@@ -687,9 +687,9 @@ with st.sidebar:
     )
     sim_thresh = st.slider(
         "Relevance Threshold (Cosine Sim)",
-        min_value=0.15,
+        min_value=0.10,
         max_value=0.50,
-        value=0.25,
+        value=0.15,
         step=0.05,
         help="Evidence cosine similarity below which claim is marked UNVERIFIED.",
     )
@@ -747,7 +747,7 @@ st.markdown("""
     </p>
     <div class="system-status-bar">
         <div class="status-badge status-badge-green">
-            <span>●</span> <span>Mode: INT8 Optimized CPU</span>
+            <span>●</span> <span>Mode: FP32 Fast CPU (Batch + Cache)</span>
         </div>
         <div class="status-badge status-badge-blue">
             <span>⚡</span> <span>Preset Cache: Ready (4 Scenarios &lt;50ms)</span>
@@ -948,7 +948,7 @@ with tab_audit:
                     "claims": matched_preset["claims"],
                 }
             else:
-                with st.spinner("Executing live 4-stage atomic verification pipeline (INT8 Quantized / Batched)..."):
+                with st.spinner("Executing live 4-stage atomic verification pipeline (FP32 Batched + Cached)..."):
                     t_start = time.perf_counter()
                     decomposer, retriever, verifier = get_live_pipeline(
                         device=device_selection,
@@ -1310,7 +1310,7 @@ with tab_benchmark:
             <div class="kpi-card" style="border-top: 3px solid #F59E0B;">
                 <div class="kpi-label">Avg Pipeline Latency</div>
                 <div class="kpi-value" style="color: #FBBF24;">{f_sum['avg_latency_ms']:.1f} ms</div>
-                <div class="kpi-sub">Batched INT8 Inference</div>
+                <div class="kpi-sub">Batched FP32 Inference</div>
             </div>
             """, unsafe_allow_html=True)
 

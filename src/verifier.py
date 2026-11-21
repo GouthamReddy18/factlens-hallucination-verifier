@@ -61,9 +61,9 @@ class GroundingVerifier:
         device: Optional[str] = None,
         entailment_threshold: float = 0.55,
         contradiction_threshold: float = 0.45,
-        min_similarity_threshold: float = 0.25,
+        min_similarity_threshold: float = 0.15,
         lazy_load: bool = False,
-        quantize: bool = True,
+        quantize: bool = False,
     ) -> None:
         """Initialize GroundingVerifier.
 
@@ -74,24 +74,23 @@ class GroundingVerifier:
             contradiction_threshold: Minimum contradiction probability required for CONTRADICTED.
             min_similarity_threshold: Evidence cosine similarity below which claim is UNVERIFIED.
             lazy_load: If True, defer model loading until first inference call.
-            quantize: If True and on CPU, apply PyTorch dynamic INT8 quantization.
+            quantize: Deprecated/ignored. Kept for signature compatibility. Runs full FP32.
         """
         self.model_name = model_name
         self.device = device
         self.entailment_threshold = entailment_threshold
         self.contradiction_threshold = contradiction_threshold
         self.min_similarity_threshold = min_similarity_threshold
-        self.quantize = quantize
+        self.quantize = False
         self.is_quantized: bool = False
         self._tokenizer = None
         self._model = None
-        self._base_model = None
 
         if not lazy_load:
             self._load_model()
 
     def _load_model(self) -> None:
-        """Load tokenizer and sequence classification model with optional INT8 quantization."""
+        """Load tokenizer and sequence classification model strictly in FP32."""
         if self._model is not None and self._tokenizer is not None:
             return
 
@@ -109,34 +108,18 @@ class GroundingVerifier:
             except Exception:
                 pass
 
-        logger.info(f"Loading NLI model '{self.model_name}' on {self.device}...")
+        logger.info(f"Loading NLI model '{self.model_name}' in FP32 on {self.device}...")
         self._tokenizer = AutoTokenizer.from_pretrained(self.model_name)
-        base_model = AutoModelForSequenceClassification.from_pretrained(
+        model = AutoModelForSequenceClassification.from_pretrained(
             self.model_name,
             torch_dtype=torch.float32,
         )
-        base_model = base_model.float()
-        base_model.to(self.device)
-        base_model.eval()
-        self._base_model = base_model
-
-        # Dynamic INT8 Quantization on CPU
-        if self.device == "cpu" and self.quantize:
-            try:
-                gc.collect()
-                logger.info("Applying dynamic INT8 quantization to DeBERTa-v3 Linear layers...")
-                self._model = torch.quantization.quantize_dynamic(
-                    base_model, {torch.nn.Linear}, dtype=torch.qint8
-                )
-                self.is_quantized = True
-                logger.info("DeBERTa-v3 successfully dynamically quantized to INT8.")
-            except Exception as e:
-                logger.warning(f"INT8 dynamic quantization skipped, using FP32 ({e}).")
-                self._model = self._base_model
-                self.is_quantized = False
-        else:
-            self._model = base_model
-            self.is_quantized = False
+        model = model.float()
+        model.to(self.device)
+        model.eval()
+        self._model = model
+        self.is_quantized = False
+        logger.info(f"DeBERTa-v3 successfully loaded in FP32 on {self.device}.")
 
     @property
     def tokenizer(self):
@@ -151,36 +134,15 @@ class GroundingVerifier:
         return self._model
 
     def _run_forward(self, inputs: Dict[str, Any]) -> Any:
-        """Execute forward pass with automatic fallback to unquantized FP32 model if quantized execution fails."""
+        """Execute forward pass with torch.inference_mode()."""
         import torch
 
         context_manager = getattr(torch, "inference_mode", torch.no_grad)
-        try:
-            with context_manager():
-                return self.model(**inputs)
-        except RuntimeError as e:
-            err_msg = str(e)
-            if self.is_quantized or ("qlinear_dynamic" in err_msg or "data type" in err_msg or "ONEDNN" in err_msg):
-                logger.warning(
-                    f"Dynamic quantization forward pass failed ({err_msg}). "
-                    "Automatically falling back to unquantized float32 DeBERTa-v3 CPU execution."
-                )
-                if self._base_model is not None:
-                    self._model = self._base_model
-                else:
-                    from transformers import AutoModelForSequenceClassification
-                    self._model = AutoModelForSequenceClassification.from_pretrained(
-                        self.model_name,
-                        torch_dtype=torch.float32,
-                    ).float().to(self.device).eval()
-                    self._base_model = self._model
-                self.is_quantized = False
-                with context_manager():
-                    return self._model(**inputs)
-            raise e
+        with context_manager():
+            return self.model(**inputs)
 
     def _get_label_mapping(self) -> Dict[str, int]:
-        """Dynamically extract label mapping from model config."""
+        """Extract label mapping from model config (0: entailment, 1: neutral, 2: contradiction)."""
         id2label = getattr(self.model.config, "id2label", {0: "entailment", 1: "neutral", 2: "contradiction"})
         mapping = {}
         for idx, name in id2label.items():
@@ -191,6 +153,12 @@ class GroundingVerifier:
                 mapping["contradiction"] = int(idx)
             elif "neut" in name_lower:
                 mapping["neutral"] = int(idx)
+        if "entailment" not in mapping:
+            mapping["entailment"] = 0
+        if "neutral" not in mapping:
+            mapping["neutral"] = 1
+        if "contradiction" not in mapping:
+            mapping["contradiction"] = 2
         return mapping
 
     def evaluate_verdict(
@@ -361,19 +329,100 @@ class GroundingVerifier:
         source_text: str = "",
         generated_text: str = "",
     ) -> VerificationResult:
-        """Run verification over retrieved claim-evidence candidate pairs using batched inference."""
+        """Run verification over retrieved claim-evidence candidate pairs using batched inference.
+
+        Evaluates (evidence_sentence, claim) against each retrieved evidence sentence individually,
+        selecting the evidence sentence with the highest entailment or contradiction signal.
+        """
         start_time = time.perf_counter()
 
-        pairs_to_verify = [
-            {
-                "premise": item.get("combined_evidence", ""),
-                "hypothesis": item.get("claim", ""),
-                "evidence_similarity": item.get("top_score", 0.0),
-            }
-            for item in retrieval_results
-        ]
+        if not retrieval_results:
+            return VerificationResult(
+                claims=[],
+                trust_score=0.0,
+                verdict="UNVERIFIED",
+                counts={"supported": 0, "contradicted": 0, "unverified": 0, "total": 0},
+                latency_ms=0.0,
+                baseline_whole_doc=None,
+            )
 
-        claims_verified = self.verify_batch(pairs_to_verify)
+        pairs_to_batch: List[Dict[str, Any]] = []
+        claim_pair_slices: List[tuple[int, int]] = []
+        fallback_claims: Dict[int, ClaimVerification] = {}
+
+        for claim_idx, item in enumerate(retrieval_results):
+            claim = item.get("claim", "").strip()
+            sentences = item.get("evidence_sentences", [])
+            if not sentences and item.get("combined_evidence"):
+                sentences = [item.get("combined_evidence")]
+            scores = item.get("evidence_scores", [])
+            top_score = float(item.get("top_score", 0.0))
+
+            # If no sentences or all evidence below minimum similarity threshold
+            if not sentences or top_score < self.min_similarity_threshold:
+                ev_text = sentences[0] if sentences else item.get("combined_evidence", "")
+                fallback_claims[claim_idx] = ClaimVerification(
+                    claim=claim,
+                    evidence_text=ev_text,
+                    evidence_similarity=top_score,
+                    verdict="UNVERIFIED",
+                    probabilities={"entailment": 0.0, "neutral": 1.0, "contradiction": 0.0},
+                    explanation=(
+                        f"Retrieved evidence similarity ({top_score:.3f}) is below threshold "
+                        f"({self.min_similarity_threshold:.2f}); claim cannot be verified against source."
+                    ),
+                )
+                claim_pair_slices.append((-1, -1))
+                continue
+
+            # Queue individual (sentence, claim) candidate pairs
+            start_pos = len(pairs_to_batch)
+            for j, sent in enumerate(sentences):
+                sent_clean = sent.strip()
+                if not sent_clean:
+                    continue
+                score = float(scores[j]) if j < len(scores) else top_score
+                pairs_to_batch.append({
+                    "premise": sent_clean,
+                    "hypothesis": claim,
+                    "evidence_similarity": score,
+                })
+            end_pos = len(pairs_to_batch)
+            claim_pair_slices.append((start_pos, end_pos))
+
+        # Run batched inference across all candidate (sentence, claim) pairs
+        batched_verifications = self.verify_batch(pairs_to_batch) if pairs_to_batch else []
+
+        claims_verified: List[ClaimVerification] = []
+        for claim_idx, (start_pos, end_pos) in enumerate(claim_pair_slices):
+            if claim_idx in fallback_claims:
+                claims_verified.append(fallback_claims[claim_idx])
+                continue
+
+            candidates = batched_verifications[start_pos:end_pos]
+            if not candidates:
+                item = retrieval_results[claim_idx]
+                claims_verified.append(
+                    ClaimVerification(
+                        claim=item.get("claim", ""),
+                        evidence_text="",
+                        evidence_similarity=float(item.get("top_score", 0.0)),
+                        verdict="UNVERIFIED",
+                        probabilities={"entailment": 0.0, "neutral": 1.0, "contradiction": 0.0},
+                        explanation="No valid evidence sentences available for verification.",
+                    )
+                )
+                continue
+
+            # Select the candidate sentence with the highest entailment or contradiction signal
+            best_candidate = max(
+                candidates,
+                key=lambda c: max(
+                    c.probabilities.get("entailment", 0.0),
+                    c.probabilities.get("contradiction", 0.0),
+                ),
+            )
+            claims_verified.append(best_candidate)
 
         # Compute summary counts
         counts = {
