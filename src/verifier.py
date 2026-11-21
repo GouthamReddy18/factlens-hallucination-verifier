@@ -85,6 +85,7 @@ class GroundingVerifier:
         self.is_quantized: bool = False
         self._tokenizer = None
         self._model = None
+        self._base_model = None
 
         if not lazy_load:
             self._load_model()
@@ -110,9 +111,14 @@ class GroundingVerifier:
 
         logger.info(f"Loading NLI model '{self.model_name}' on {self.device}...")
         self._tokenizer = AutoTokenizer.from_pretrained(self.model_name)
-        base_model = AutoModelForSequenceClassification.from_pretrained(self.model_name)
+        base_model = AutoModelForSequenceClassification.from_pretrained(
+            self.model_name,
+            torch_dtype=torch.float32,
+        )
+        base_model = base_model.float()
         base_model.to(self.device)
         base_model.eval()
+        self._base_model = base_model
 
         # Dynamic INT8 Quantization on CPU
         if self.device == "cpu" and self.quantize:
@@ -126,7 +132,7 @@ class GroundingVerifier:
                 logger.info("DeBERTa-v3 successfully dynamically quantized to INT8.")
             except Exception as e:
                 logger.warning(f"INT8 dynamic quantization skipped, using FP32 ({e}).")
-                self._model = base_model
+                self._model = self._base_model
                 self.is_quantized = False
         else:
             self._model = base_model
@@ -143,6 +149,35 @@ class GroundingVerifier:
         if self._model is None:
             self._load_model()
         return self._model
+
+    def _run_forward(self, inputs: Dict[str, Any]) -> Any:
+        """Execute forward pass with automatic fallback to unquantized FP32 model if quantized execution fails."""
+        import torch
+
+        context_manager = getattr(torch, "inference_mode", torch.no_grad)
+        try:
+            with context_manager():
+                return self.model(**inputs)
+        except RuntimeError as e:
+            err_msg = str(e)
+            if self.is_quantized or ("qlinear_dynamic" in err_msg or "data type" in err_msg or "ONEDNN" in err_msg):
+                logger.warning(
+                    f"Dynamic quantization forward pass failed ({err_msg}). "
+                    "Automatically falling back to unquantized float32 DeBERTa-v3 CPU execution."
+                )
+                if self._base_model is not None:
+                    self._model = self._base_model
+                else:
+                    from transformers import AutoModelForSequenceClassification
+                    self._model = AutoModelForSequenceClassification.from_pretrained(
+                        self.model_name,
+                        torch_dtype=torch.float32,
+                    ).float().to(self.device).eval()
+                    self._base_model = self._model
+                self.is_quantized = False
+                with context_manager():
+                    return self._model(**inputs)
+            raise e
 
     def _get_label_mapping(self) -> Dict[str, int]:
         """Dynamically extract label mapping from model config."""
@@ -215,11 +250,9 @@ class GroundingVerifier:
             return_tensors="pt",
         ).to(self.device)
 
-        context_manager = getattr(torch, "inference_mode", torch.no_grad)
-        with context_manager():
-            outputs = self.model(**inputs)
-            logits = outputs.logits
-            probs = torch.softmax(logits, dim=-1)[0]
+        outputs = self._run_forward(inputs)
+        logits = outputs.logits
+        probs = torch.softmax(logits, dim=-1)[0]
 
         label_map = self._get_label_mapping()
         p_entail = float(probs[label_map.get("entailment", 0)].item())
@@ -290,10 +323,8 @@ class GroundingVerifier:
                 return_tensors="pt",
             ).to(self.device)
 
-            context_manager = getattr(torch, "inference_mode", torch.no_grad)
-            with context_manager():
-                outputs = self.model(**inputs)
-                all_probs = torch.softmax(outputs.logits, dim=-1)
+            outputs = self._run_forward(inputs)
+            all_probs = torch.softmax(outputs.logits, dim=-1)
 
             label_map = self._get_label_mapping()
 
@@ -481,10 +512,8 @@ class GroundingVerifier:
             return_tensors="pt",
         ).to(self.device)
 
-        context_manager = getattr(torch, "inference_mode", torch.no_grad)
-        with context_manager():
-            outputs = self.model(**inputs)
-            probs = torch.softmax(outputs.logits, dim=-1)[0]
+        outputs = self._run_forward(inputs)
+        probs = torch.softmax(outputs.logits, dim=-1)[0]
 
         label_map = self._get_label_mapping()
         p_entail = float(probs[label_map.get("entailment", 0)].item())
