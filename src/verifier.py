@@ -109,7 +109,7 @@ class GroundingVerifier:
                 pass
 
         logger.info(f"Loading NLI model '{self.model_name}' in FP32 on {self.device}...")
-        self._tokenizer = AutoTokenizer.from_pretrained(self.model_name)
+        self._tokenizer = AutoTokenizer.from_pretrained(self.model_name, use_fast=False)
         model = AutoModelForSequenceClassification.from_pretrained(
             self.model_name,
             torch_dtype=torch.float32,

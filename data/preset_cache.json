@@ -4,66 +4,54 @@
     "title": "RBI Monetary Policy Brief",
     "badge": "Numerical Distortion",
     "category": "Numerical Distortion",
-    "icon": "🏛️",
+    "icon": "\ud83c\udfdb\ufe0f",
     "domain": "Macroeconomic Policy",
-    "desc": "Alters benchmark repo rate from 6.50% to 8.50% and standing deposit facility from 6.25% to 8.25%.",
+    "desc": "Alters benchmark repo rate from 6.50% to 8.50% and SDF from 6.25% to 8.25%.",
     "source": "The Reserve Bank of India's Monetary Policy Committee decided by a 4 to 2 majority to keep the policy repo rate unchanged at 6.50 percent in its August 2024 meeting. Consequently, the standing deposit facility rate remains at 6.25 percent and the marginal standing facility rate at 6.75 percent. The MPC reiterated its commitment to withdraw accommodation to achieve 4% headline inflation.",
     "generated": "The Reserve Bank of India's Monetary Policy Committee met in August 2024. The committee voted 4 to 2 to raise the repo rate to 8.50 percent, and the standing deposit facility rate was altered to 8.25 percent to control sticky inflation.",
-    "trust_score": 18.5,
+    "trust_score": 0.0,
     "verdict": "HALLUCINATED",
     "counts": {
-      "supported": 1,
+      "supported": 0,
       "contradicted": 2,
       "unverified": 0,
-      "total": 3
+      "total": 2
     },
-    "latency_ms": 38.2,
+    "latency_ms": 11250.86,
     "cached_response_time_ms": 32.4,
     "baseline_whole_doc": {
-      "verdict": "SUPPORTED",
+      "verdict": "CONTRADICTED",
       "probabilities": {
-        "entailment": 0.7842,
-        "neutral": 0.1418,
-        "contradiction": 0.0740
+        "entailment": 0.0001,
+        "neutral": 0.0005,
+        "contradiction": 0.9994
       },
-      "is_hallucinated": false
+      "is_hallucinated": true
     },
     "claims": [
       {
-        "claim": "The Reserve Bank of India's Monetary Policy Committee met in August 2024.",
+        "claim": "The Reserve Bank of India's Monetary Policy Committee met in August The committee voted 4 to 2 to raise the repo rate to 8.50 percent.",
         "evidence_text": "The Reserve Bank of India's Monetary Policy Committee decided by a 4 to 2 majority to keep the policy repo rate unchanged at 6.50 percent in its August 2024 meeting.",
-        "evidence_similarity": 0.884,
-        "verdict": "SUPPORTED",
-        "probabilities": {
-          "entailment": 0.9624,
-          "neutral": 0.0308,
-          "contradiction": 0.0068
-        },
-        "explanation": "Supported by source evidence with 96.2% entailment confidence."
-      },
-      {
-        "claim": "The committee voted 4 to 2 to raise the repo rate to 8.50 percent.",
-        "evidence_text": "The Reserve Bank of India's Monetary Policy Committee decided by a 4 to 2 majority to keep the policy repo rate unchanged at 6.50 percent in its August 2024 meeting.",
-        "evidence_similarity": 0.842,
+        "evidence_similarity": 0.7817089557647705,
         "verdict": "CONTRADICTED",
         "probabilities": {
-          "entailment": 0.0132,
-          "neutral": 0.0418,
-          "contradiction": 0.9450
+          "entailment": 0.0002,
+          "neutral": 0.0013,
+          "contradiction": 0.9986
         },
-        "explanation": "Contradicts source evidence with 94.5% contradiction confidence (Source says repo rate kept unchanged at 6.50%, not raised to 8.50%)."
+        "explanation": "Contradicts source evidence with 99.9% contradiction confidence."
       },
       {
         "claim": "The standing deposit facility rate was altered to 8.25 percent to control sticky inflation.",
         "evidence_text": "Consequently, the standing deposit facility rate remains at 6.25 percent and the marginal standing facility rate at 6.75 percent.",
-        "evidence_similarity": 0.816,
+        "evidence_similarity": 0.7205730676651001,
         "verdict": "CONTRADICTED",
         "probabilities": {
-          "entailment": 0.0168,
-          "neutral": 0.0712,
-          "contradiction": 0.9120
+          "entailment": 0.0001,
+          "neutral": 0.0036,
+          "contradiction": 0.9963
         },
-        "explanation": "Contradicts source evidence with 91.2% contradiction confidence (Source confirms SDF remains at 6.25%, not 8.25%)."
+        "explanation": "Contradicts source evidence with 99.6% contradiction confidence."
       }
     ]
   },
@@ -72,9 +60,9 @@
     "title": "Clinical Trial Abstract",
     "badge": "Entity/Attribute Swap",
     "category": "Entity/Attribute Swap",
-    "icon": "🧬",
+    "icon": "\ud83e\uddec",
     "domain": "Medical & Pharmacology",
-    "desc": "Swaps developer pharmaceutical firms between oral antiviral Paxlovid and mRNA lipid nanoparticle vaccine.",
+    "desc": "Swaps developer pharmaceutical firms between oral antiviral Paxlovid and mRNA vaccine.",
     "source": "Pfizer developed the oral antiviral Paxlovid (nirmatrelvir and ritonavir), which inhibits the SARS-CoV-2 main protease. In contrast, Moderna formulated the mRNA-1273 vaccine, an encapsulated lipid nanoparticle that encodes the viral spike glycoprotein.",
     "generated": "Moderna developed the oral antiviral medication Paxlovid to inhibit the SARS-CoV-2 protease. Meanwhile, Pfizer formulated the mRNA lipid nanoparticle vaccine targeting the spike glycoprotein.",
     "trust_score": 0.0,
@@ -85,41 +73,41 @@
       "unverified": 0,
       "total": 2
     },
-    "latency_ms": 34.6,
-    "cached_response_time_ms": 28.5,
+    "latency_ms": 4682.16,
+    "cached_response_time_ms": 32.4,
     "baseline_whole_doc": {
-      "verdict": "SUPPORTED",
+      "verdict": "CONTRADICTED",
       "probabilities": {
-        "entailment": 0.7254,
-        "neutral": 0.2012,
-        "contradiction": 0.0734
+        "entailment": 0.0067,
+        "neutral": 0.0021,
+        "contradiction": 0.9912
       },
-      "is_hallucinated": false
+      "is_hallucinated": true
     },
     "claims": [
       {
         "claim": "Moderna developed the oral antiviral medication Paxlovid to inhibit the SARS-CoV-2 protease.",
         "evidence_text": "Pfizer developed the oral antiviral Paxlovid (nirmatrelvir and ritonavir), which inhibits the SARS-CoV-2 main protease.",
-        "evidence_similarity": 0.865,
+        "evidence_similarity": 0.8260647654533386,
         "verdict": "CONTRADICTED",
         "probabilities": {
-          "entailment": 0.0234,
-          "neutral": 0.0816,
-          "contradiction": 0.8950
+          "entailment": 0.0014,
+          "neutral": 0.001,
+          "contradiction": 0.9975
         },
-        "explanation": "Contradicts source evidence with 89.5% contradiction confidence (Pfizer developed Paxlovid, not Moderna)."
+        "explanation": "Contradicts source evidence with 99.8% contradiction confidence."
       },
       {
         "claim": "Meanwhile, Pfizer formulated the mRNA lipid nanoparticle vaccine targeting the spike glycoprotein.",
         "evidence_text": "In contrast, Moderna formulated the mRNA-1273 vaccine, an encapsulated lipid nanoparticle that encodes the viral spike glycoprotein.",
-        "evidence_similarity": 0.852,
+        "evidence_similarity": 0.734627902507782,
         "verdict": "CONTRADICTED",
         "probabilities": {
-          "entailment": 0.0228,
-          "neutral": 0.0952,
-          "contradiction": 0.8820
+          "entailment": 0.0007,
+          "neutral": 0.0022,
+          "contradiction": 0.9971
         },
-        "explanation": "Contradicts source evidence with 88.2% contradiction confidence (Moderna formulated mRNA-1273, not Pfizer)."
+        "explanation": "Contradicts source evidence with 99.7% contradiction confidence."
       }
     ]
   },
@@ -128,54 +116,66 @@
     "title": "Tech Earnings Release",
     "badge": "Extrapolated Fabrication",
     "category": "Extrapolated Fabrication",
-    "icon": "📈",
+    "icon": "\ud83d\udcc8",
     "domain": "Corporate Financials",
-    "desc": "Injects a fictitious assertion that the company will shut down iPhone and transition into nuclear reactors.",
+    "desc": "Fabricates an unverified corporate transition into nuclear energy reactors.",
     "source": "Apple Inc. reported quarterly revenue of $85.8 billion for Q3 FY24, up 5% year-over-year. Diluted earnings per share were $1.40. Services revenue established an all-time record of $24.2 billion, driven by subscriptions across the ecosystem.",
     "generated": "Apple announced Q3 FY24 revenue of $85.8 billion with diluted EPS of $1.40. The company announced it will shut down the iPhone division in 2025 and transition exclusively into nuclear energy reactors.",
-    "trust_score": 41.2,
-    "verdict": "PARTIALLY_GROUNDED",
+    "trust_score": 20.0,
+    "verdict": "UNVERIFIED",
     "counts": {
-      "supported": 1,
+      "supported": 0,
       "contradicted": 0,
-      "unverified": 1,
-      "total": 2
+      "unverified": 3,
+      "total": 3
     },
-    "latency_ms": 36.1,
-    "cached_response_time_ms": 31.0,
+    "latency_ms": 4649.49,
+    "cached_response_time_ms": 32.4,
     "baseline_whole_doc": {
-      "verdict": "SUPPORTED",
+      "verdict": "UNVERIFIED",
       "probabilities": {
-        "entailment": 0.6924,
-        "neutral": 0.2310,
-        "contradiction": 0.0766
+        "entailment": 0.0014,
+        "neutral": 0.9679,
+        "contradiction": 0.0307
       },
-      "is_hallucinated": false
+      "is_hallucinated": true
     },
     "claims": [
       {
         "claim": "Apple announced Q3 FY24 revenue of $85.8 billion with diluted EPS of $1.40.",
-        "evidence_text": "Apple Inc. reported quarterly revenue of $85.8 billion for Q3 FY24, up 5% year-over-year. Diluted earnings per share were $1.40.",
-        "evidence_similarity": 0.941,
-        "verdict": "SUPPORTED",
-        "probabilities": {
-          "entailment": 0.9782,
-          "neutral": 0.0182,
-          "contradiction": 0.0036
-        },
-        "explanation": "Supported by source evidence with 97.8% entailment confidence."
-      },
-      {
-        "claim": "The company announced it will shut down the iPhone division in 2025 and transition exclusively into nuclear energy reactors.",
-        "evidence_text": "Services revenue established an all-time record of $24.2 billion, driven by subscriptions across the ecosystem.",
-        "evidence_similarity": 0.218,
+        "evidence_text": "Diluted earnings per share were $1.40.",
+        "evidence_similarity": 0.4079442620277405,
         "verdict": "UNVERIFIED",
         "probabilities": {
-          "entailment": 0.0230,
-          "neutral": 0.8650,
-          "contradiction": 0.1120
+          "entailment": 0.0014,
+          "neutral": 0.9981,
+          "contradiction": 0.0005
         },
-        "explanation": "Retrieved evidence similarity (0.218) is below threshold (0.25); claim cannot be verified against source (Extrapolated Fabrication)."
+        "explanation": "Insufficient conclusive evidence in source (neutral=99.8%, entail=0.1%, contra=0.1%)."
+      },
+      {
+        "claim": "The company announced it will shut down the iPhone division in 2025.",
+        "evidence_text": "Apple Inc. reported quarterly revenue of $85.8 billion for Q3 FY24, up 5% year-over-year.",
+        "evidence_similarity": 0.3721569776535034,
+        "verdict": "UNVERIFIED",
+        "probabilities": {
+          "entailment": 0.0001,
+          "neutral": 0.9969,
+          "contradiction": 0.003
+        },
+        "explanation": "Insufficient conclusive evidence in source (neutral=99.7%, entail=0.0%, contra=0.3%)."
+      },
+      {
+        "claim": "Transition exclusively into nuclear energy reactors.",
+        "evidence_text": "Diluted earnings per share were $1.40.",
+        "evidence_similarity": 0.0412,
+        "verdict": "UNVERIFIED",
+        "probabilities": {
+          "entailment": 0.0,
+          "neutral": 1.0,
+          "contradiction": 0.0
+        },
+        "explanation": "Retrieved evidence similarity (0.041) is below threshold (0.15); claim cannot be verified against source."
       }
     ]
   },
@@ -184,12 +184,12 @@
     "title": "100% Grounded Baseline",
     "badge": "Fully Grounded",
     "category": "Fully Grounded",
-    "icon": "🛡️",
+    "icon": "\ud83d\udee1\ufe0f",
     "domain": "Clinical Pharmacology",
     "desc": "Fully entailed summary: perfectly entails all numerical, factual, and adverse event assertions.",
     "source": "In a 68-week double-blind trial of once-weekly subcutaneous semaglutide (2.4 mg) in 1,961 adults with overweight or obesity without diabetes, the mean change in body weight from baseline to week 68 was -14.9% in the semaglutide group as compared with -2.4% with placebo. Gastrointestinal disorders, including nausea and diarrhea, were the most frequently reported adverse events.",
     "generated": "In a 68-week clinical trial of 1,961 adults with obesity, once-weekly semaglutide 2.4 mg achieved a 14.9% average reduction in body weight compared to 2.4% with placebo. Nausea and diarrhea were among the most common adverse side effects reported.",
-    "trust_score": 94.8,
+    "trust_score": 99.5,
     "verdict": "FULLY_GROUNDED",
     "counts": {
       "supported": 2,
@@ -197,14 +197,14 @@
       "unverified": 0,
       "total": 2
     },
-    "latency_ms": 32.8,
-    "cached_response_time_ms": 29.2,
+    "latency_ms": 7018.14,
+    "cached_response_time_ms": 32.4,
     "baseline_whole_doc": {
       "verdict": "SUPPORTED",
       "probabilities": {
-        "entailment": 0.9348,
-        "neutral": 0.0524,
-        "contradiction": 0.0128
+        "entailment": 0.997,
+        "neutral": 0.0021,
+        "contradiction": 0.0009
       },
       "is_hallucinated": false
     },
@@ -212,26 +212,26 @@
       {
         "claim": "In a 68-week clinical trial of 1,961 adults with obesity, once-weekly semaglutide 2.4 mg achieved a 14.9% average reduction in body weight compared to 2.4% with placebo.",
         "evidence_text": "In a 68-week double-blind trial of once-weekly subcutaneous semaglutide (2.4 mg) in 1,961 adults with overweight or obesity without diabetes, the mean change in body weight from baseline to week 68 was -14.9% in the semaglutide group as compared with -2.4% with placebo.",
-        "evidence_similarity": 0.962,
+        "evidence_similarity": 0.903474748134613,
         "verdict": "SUPPORTED",
         "probabilities": {
-          "entailment": 0.9542,
-          "neutral": 0.0382,
-          "contradiction": 0.0076
+          "entailment": 0.9928,
+          "neutral": 0.0044,
+          "contradiction": 0.0028
         },
-        "explanation": "Supported by source evidence with 95.4% entailment confidence."
+        "explanation": "Supported by source evidence with 99.3% entailment confidence."
       },
       {
-        "claim": "Nausea and diarrhea were among the most common adverse side effects reported.",
+        "claim": "Diarrhea were among the most common adverse side effects reported.",
         "evidence_text": "Gastrointestinal disorders, including nausea and diarrhea, were the most frequently reported adverse events.",
-        "evidence_similarity": 0.898,
+        "evidence_similarity": 0.8090922832489014,
         "verdict": "SUPPORTED",
         "probabilities": {
-          "entailment": 0.9412,
-          "neutral": 0.0490,
-          "contradiction": 0.0098
+          "entailment": 0.998,
+          "neutral": 0.0017,
+          "contradiction": 0.0003
         },
-        "explanation": "Supported by source evidence with 94.1% entailment confidence."
+        "explanation": "Supported by source evidence with 99.8% entailment confidence."
       }
     ]
   }
